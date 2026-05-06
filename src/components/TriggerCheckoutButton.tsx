@@ -5,7 +5,7 @@ import type {
   TaxCalculationMode,
 } from "@commercetools/platform-sdk";
 import { createCart } from "../services/cart";
-import type { CartCheckoutData, CheckoutMode } from "./CartWrapper";
+import type { CartCheckoutData, CheckoutMode } from "./Playground/CartWrapper";
 import {
   CART_CURRENCY,
   CART_COUNTRY,

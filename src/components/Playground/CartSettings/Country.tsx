@@ -1,6 +1,6 @@
 import { type FC, useState } from "react";
 import type { OnLocalCartUpdate } from "../CartWrapper";
-import { RadioGroup } from "../RadioGroup";
+import { RadioGroup } from "./RadioGroup";
 
 const OPTIONS = [
   { value: "DE", label: "Germany" },

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { FC } from "react";
 import { TriggerCheckoutButton } from "./TriggerCheckoutButton";
-import { PRODUCTS } from "./ProductsGroup";
+import { PRODUCTS } from "./Playground/ProductsGroup";
 
 const meta = {
   title: "Checkout",

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { DEFAULT_CUSTOMER_ID } from "../../constants";
+import { DEFAULT_CUSTOMER_ID } from "../../../constants";
 import type { OnLocalCartUpdate } from "../CartWrapper";
-import { RadioGroup } from "../RadioGroup";
+import { RadioGroup } from "./RadioGroup";
 
 const OPTIONS = [
   { value: "none", label: "Guest" },

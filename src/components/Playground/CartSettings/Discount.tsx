@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DISCOUNT_CODES } from '../../constants';
+import { DISCOUNT_CODES } from '../../../constants';
 import type { OnLocalCartUpdate } from '../CartWrapper';
 
 interface DiscountProps {

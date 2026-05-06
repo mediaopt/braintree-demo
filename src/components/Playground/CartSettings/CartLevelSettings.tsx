@@ -1,13 +1,13 @@
 import type { FC } from "react";
 import type { ShippingMethod } from "@commercetools/platform-sdk";
-import { GroupWrapper } from "../StandardCheckout/GroupWrapper.tsx";
-import { ShippingMethods } from "../StandardCheckout/ShippingMethods.tsx";
-import { Discount } from "../StandardCheckout/Discount.tsx";
-import { Customer } from "../StandardCheckout/Customer.tsx";
+import { GroupWrapper } from "./GroupWrapper.tsx";
+import { ShippingMethods } from "./ShippingMethods.tsx";
+import { Discount } from "./Discount.tsx";
+import { Customer } from "./Customer.tsx";
 import { PriceRoundingMode } from "./PriceRoundingMode.tsx";
 import { TaxCalculationMode } from "./TaxCalculationMode.tsx";
 import { Country } from "./Country.tsx";
-import { Button } from "../Button.tsx";
+import { Button } from "../../Button.tsx";
 import type { OnLocalCartUpdate } from "../CartWrapper.tsx";
 
 interface CartLevelSettingsProps {

@@ -5,13 +5,13 @@ import type {
   ShippingMethod,
   ShippingMethodResourceIdentifier,
 } from "@commercetools/platform-sdk";
-import { createCart, updateCart as updateCartApi } from "../services/cart";
-import { getShippingMethods } from "../services/shipping";
-import { CART_CURRENCY, CART_COUNTRY, DEFAULT_CUSTOMER_ID } from "../constants";
+import { createCart, updateCart as updateCartApi } from "../../services/cart";
+import { getShippingMethods } from "../../services/shipping";
+import { CART_CURRENCY, CART_COUNTRY, DEFAULT_CUSTOMER_ID } from "../../constants";
 import { ProductsGroup } from "./ProductsGroup";
-import { CartLevelSettings } from "./CartLevelSettings/CartLevelSettings";
-import { CartSummary } from "./StandardCheckout/CartSummary";
-import { handleCartActions } from "./helpers/handleCartActions.ts";
+import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
+import { CartSummary } from "./CartSummary";
+import { handleCartActions } from "./handleCartActions.ts";
 
 export type CheckoutMode = "standard" | "express" | "pureVault";
 
@@ -39,7 +39,7 @@ export type CartStateData = Mutable<
 
 export type OnLocalCartUpdate = (partial: Partial<CartStateData>) => void;
 
-export type CartCheckoutData = { cartId: string; currencyCode: string };
+export type CartCheckoutData = { cartId: string; currencyCode: string; countryCode: string };
 
 interface CartWrapperProps {
   mode: CheckoutMode;
@@ -104,6 +104,7 @@ export const CartWrapper = ({
       setCheckoutData({
         cartId: body.id,
         currencyCode: body.totalPrice.currencyCode,
+        countryCode: body.billingAddress?.country ?? CART_COUNTRY,
       });
   };
 
@@ -155,6 +156,7 @@ export const CartWrapper = ({
                 setCheckoutData({
                   cartId: serverCart.id,
                   currencyCode: serverCart.totalPrice.currencyCode,
+                  countryCode: serverCart.billingAddress?.country ?? CART_COUNTRY,
                 })
               }
             />

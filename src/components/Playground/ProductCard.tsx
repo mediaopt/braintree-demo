@@ -4,9 +4,9 @@ import {
   getProduct,
   addProductToCart,
   removeProductFromCart,
-} from "../services/products";
-import { formatPrice } from "../services/format";
-import { Button } from "./Button.tsx";
+} from "../../services/products";
+import { formatPrice } from "../../services/format";
+import { Button } from "../Button.tsx";
 
 interface ProductCardProps {
   productId: string;

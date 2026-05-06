@@ -1,6 +1,6 @@
 import type { Cart } from "@commercetools/platform-sdk";
 import { ProductCard } from "./ProductCard";
-import { GroupWrapper } from "./StandardCheckout/GroupWrapper.tsx";
+import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
 
 export const PRODUCTS = [
   {

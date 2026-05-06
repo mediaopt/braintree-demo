@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CartWrapper, type CheckoutMode } from "./components/CartWrapper";
+import { CartWrapper, type CheckoutMode } from "./components/Playground/CartWrapper";
 
 function App() {
   const [flow, setFlow] = useState<CheckoutMode>("standard");

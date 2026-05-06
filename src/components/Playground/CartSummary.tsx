@@ -2,7 +2,7 @@ import type { Cart } from "@commercetools/platform-sdk";
 import { formatPrice } from "../../services/format";
 import { type FC, useMemo } from "react";
 import { Button } from "../Button.tsx";
-import { GroupWrapper } from "./GroupWrapper.tsx";
+import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
 import { DISCOUNT_CODES } from "../../constants";
 
 const getLocalizedString = (ls: Record<string, string>) =>
