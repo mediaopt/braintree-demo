@@ -1,0 +1,27 @@
+import {Meta} from "@storybook/addon-docs/blocks";
+
+<Meta title="Introduction" />
+
+# Braintree Payment Demo
+
+This project is a minimalistic demo environment for Braintree payment methods integrated with commercetools.
+
+It covers the full pre-payment cart setup flow — product selection, shipping, discounts, customer assignment — and then initialises a Braintree checkout session to render the actual payment components.
+
+All cart configuration controls are Storybook-driven. The React app handles only the parts that are not directly related to the payment process.
+
+## Required environment variables
+
+Create a `.env` file in the project root with the following variables:
+
+| Variable | Description |
+|---|---|
+| `VITE_CTP_PROJECT_KEY` | commercetools project key |
+| `VITE_CTP_CLIENT_ID` | commercetools API client ID |
+| `VITE_CTP_CLIENT_SECRET` | commercetools API client secret |
+| `VITE_CTP_AUTH_URL` | commercetools auth URL (e.g. `https://auth.europe-west1.gcp.commercetools.com`) |
+| `VITE_CTP_API_URL` | commercetools API URL (e.g. `https://api.europe-west1.gcp.commercetools.com`) |
+| `VITE_CTP_SESSION_URL` | commercetools session API URL |
+| `CTP_SCOPE` | commercetools API client scope |
+| `VITE_PROCESSOR_URL` | Braintree processor URL (e.g. `http://localhost:9002`) |
+| `BRAINTREE_MERCHANT_ACCOUNT_ID` | Braintree merchant account ID |
