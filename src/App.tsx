@@ -1,15 +1,8 @@
 import { useState } from "react";
-import {
-  type CartCheckoutData,
-  CartWrapper,
-  type CheckoutMode,
-} from "./components/CartWrapper";
+import { CartWrapper, type CheckoutMode } from "./components/CartWrapper";
 
 function App() {
   const [flow, setFlow] = useState<CheckoutMode>("standard");
-  const [checkoutData, setCheckoutData] = useState<CartCheckoutData | null>(
-    null,
-  );
 
   const flowLabels: Record<CheckoutMode, string> = {
     standard: "Standard",
@@ -33,11 +26,7 @@ function App() {
           </label>
         ))}
       </div>
-      {checkoutData ? (
-        <></>
-      ) : (
-        <CartWrapper mode={flow} triggerCheckout={setCheckoutData} />
-      )}
+      <CartWrapper mode={flow} />
     </div>
   );
 }

@@ -43,7 +43,6 @@ export type CartCheckoutData = { cartId: string; currencyCode: string };
 
 interface CartWrapperProps {
   mode: CheckoutMode;
-  triggerCheckout: (data: CartCheckoutData) => void;
   customerId?: string;
 }
 
@@ -54,13 +53,15 @@ const requiredCartDraftData: Pick<CartDraft, "currency" | "country"> = {
 
 export const CartWrapper = ({
   mode,
-  triggerCheckout,
   customerId = DEFAULT_CUSTOMER_ID,
 }: CartWrapperProps) => {
   const [localCartData, setLocalCartData] = useState<CartStateData>({});
   const [serverCart, setServerCart] = useState<Cart | undefined>(undefined);
   const [availableShippingMethods, setAvailableShippingMethods] =
     useState<ShippingMethod[]>();
+  const [checkoutData, setCheckoutData] = useState<CartCheckoutData | null>(
+    null,
+  );
 
   const localStateChanged = useMemo(
     () => Object.keys(localCartData).length > 0,
@@ -78,7 +79,6 @@ export const CartWrapper = ({
       return;
     }
     getShippingMethods(serverCart.id).then(({ body }) => {
-      console.log(body);
       setAvailableShippingMethods(body as unknown as ShippingMethod[]); //there is a mismatch in the SDK types for this endpoint, but the response is correct
     });
   }, [serverCart?.billingAddress?.country]);
@@ -101,7 +101,7 @@ export const CartWrapper = ({
     if (!body) return;
     setServerCart(body);
     if (mode !== "standard")
-      triggerCheckout({
+      setCheckoutData({
         cartId: body.id,
         currencyCode: body.totalPrice.currencyCode,
       });
@@ -132,30 +132,34 @@ export const CartWrapper = ({
 
   if (mode === "pureVault") return null;
 
-  return (
-    <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
-      {mode === "standard" && (
-        <ProductsGroup cart={serverCart} onMoveProduct={setServerCart} />
-      )}
-      <CartLevelSettings
-        cartId={serverCart?.id}
-        onCartUpdate={setLocalCartData}
-        onSubmit={mode === "standard" ? updateCart : undefined}
-        availableShippingMethods={availableShippingMethods}
-        allowSubmit={localStateChanged}
-      />
-      {mode === "express" && <ProductsGroup onBuyNow={handleCreateCart} />}
-      {serverCart && (
-        <CartSummary
-          cart={serverCart}
-          onLoadCheckout={() =>
-            triggerCheckout({
-              cartId: serverCart.id,
-              currencyCode: serverCart.totalPrice.currencyCode,
-            })
-          }
-        />
-      )}
+  return checkoutData ? (
+    <></>
+  ) : (
+    <div className="p-4 sm:p-8">
+        <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
+          {mode === "standard" && (
+            <ProductsGroup cart={serverCart} onMoveProduct={setServerCart} />
+          )}
+          <CartLevelSettings
+            cartId={serverCart?.id}
+            onCartUpdate={setLocalCartData}
+            onSubmit={mode === "standard" ? updateCart : undefined}
+            availableShippingMethods={availableShippingMethods}
+            allowSubmit={localStateChanged}
+          />
+          {mode === "express" && <ProductsGroup onBuyNow={handleCreateCart} />}
+          {serverCart && (
+            <CartSummary
+              cart={serverCart}
+              onLoadCheckout={() =>
+                setCheckoutData({
+                  cartId: serverCart.id,
+                  currencyCode: serverCart.totalPrice.currencyCode,
+                })
+              }
+            />
+          )}
+        </div>
     </div>
   );
 };

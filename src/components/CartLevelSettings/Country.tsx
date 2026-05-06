@@ -3,7 +3,6 @@ import type { OnLocalCartUpdate } from "../CartWrapper";
 import { RadioGroup } from "../RadioGroup";
 
 const OPTIONS = [
-  { value: "", label: "No country" },
   { value: "DE", label: "Germany" },
   { value: "US", label: "USA" },
 ];
@@ -13,13 +12,13 @@ interface CountryProps {
 }
 
 export const Country: FC<CountryProps> = ({ onCartUpdate }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("DE");
 
   const handleChange = (country: string) => {
     setValue(country);
     onCartUpdate({
-      billingAddress: country ? { country } : undefined,
-      shippingAddress: country ? { country } : undefined,
+      billingAddress: { country },
+      shippingAddress: { country },
     });
   };
 

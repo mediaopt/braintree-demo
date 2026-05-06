@@ -27,37 +27,27 @@ export const CartLevelSettings: FC<CartLevelSettingsProps> = ({
 }) => {
   return (
     <GroupWrapper title="Cart Level Settings">
-      <div className="flex justify-between">
-        <div>
-          <h2 className="w-full text-center">Standard settings</h2>
-          <div className="flex gap-4">
-            <Country onCartUpdate={onCartUpdate} />
-            {availableShippingMethods && (
-              <ShippingMethods
-                methods={availableShippingMethods}
-                onCartUpdate={onCartUpdate}
-              />
-            )}
-            <Discount onCartUpdate={onCartUpdate} />
-            <Customer onCartUpdate={onCartUpdate} />
+      <div className="flex gap-4 sm:gap-8">
+        <Country onCartUpdate={onCartUpdate} />
+        {availableShippingMethods && (
+          <ShippingMethods
+            methods={availableShippingMethods}
+            onCartUpdate={onCartUpdate}
+          />
+        )}
+        <Discount onCartUpdate={onCartUpdate} />
+        <Customer onCartUpdate={onCartUpdate} />
+        <PriceRoundingMode onCartUpdate={onCartUpdate} />
+        <TaxCalculationMode onCartUpdate={onCartUpdate} />
+        {onSubmit && (
+          <div className="col-span-2 mt-4">
+            <Button
+              action={onSubmit}
+              disabled={!cartId || !allowSubmit}
+              title="Modify cart"
+            />
           </div>
-        </div>
-        <div>
-          <h2 className="w-full text-center">Exotic settings</h2>
-          <div className="flex gap-4 sm:gap-8">
-            <PriceRoundingMode onCartUpdate={onCartUpdate} />
-            <TaxCalculationMode onCartUpdate={onCartUpdate} />
-            {onSubmit && (
-              <div className="col-span-2 mt-4">
-                <Button
-                  action={onSubmit}
-                  disabled={!cartId || !allowSubmit}
-                  title="Modify cart"
-                />
-              </div>
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </GroupWrapper>
   );
