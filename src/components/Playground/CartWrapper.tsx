@@ -7,11 +7,16 @@ import type {
 } from "@commercetools/platform-sdk";
 import { createCart, updateCart as updateCartApi } from "../../services/cart";
 import { getShippingMethods } from "../../services/shipping";
-import { CART_CURRENCY, CART_COUNTRY, DEFAULT_CUSTOMER_ID } from "../../constants";
+import {
+  CART_CURRENCY,
+  CART_COUNTRY,
+  DEFAULT_CUSTOMER_ID,
+} from "../../constants";
 import { ProductsGroup } from "./ProductsGroup";
 import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
 import { CartSummary } from "./CartSummary";
 import { handleCartActions } from "./handleCartActions.ts";
+import { CheckoutLoader } from "../CheckoutLoader/CheckoutLoader.tsx";
 
 export type CheckoutMode = "standard" | "express" | "pureVault";
 
@@ -39,7 +44,11 @@ export type CartStateData = Mutable<
 
 export type OnLocalCartUpdate = (partial: Partial<CartStateData>) => void;
 
-export type CartCheckoutData = { cartId: string; currencyCode: string; countryCode: string };
+export type CartCheckoutData = {
+  cartId: string;
+  currencyCode: string;
+  countryCode: string;
+};
 
 interface CartWrapperProps {
   mode: CheckoutMode;
@@ -134,34 +143,42 @@ export const CartWrapper = ({
   if (mode === "pureVault") return null;
 
   return checkoutData ? (
-    <></>
+    <CheckoutLoader
+      cartId={checkoutData.cartId}
+      currencyCode={checkoutData.currencyCode}
+      countryCode={checkoutData.countryCode}
+    />
   ) : (
     <div className="p-4 sm:p-8">
-        <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
-          {mode === "standard" && (
-            <ProductsGroup cart={serverCart} onMoveProduct={setServerCart} />
-          )}
-          <CartLevelSettings
-            cartId={serverCart?.id}
-            onCartUpdate={setLocalCartData}
-            onSubmit={mode === "standard" ? updateCart : undefined}
-            availableShippingMethods={availableShippingMethods}
-            allowSubmit={localStateChanged}
+      <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
+        {mode === "standard" && (
+          <ProductsGroup cart={serverCart} onMoveProduct={setServerCart} />
+        )}
+        <CartLevelSettings
+          cartId={serverCart?.id}
+          onCartUpdate={setLocalCartData}
+          onSubmit={mode === "standard" ? updateCart : undefined}
+          availableShippingMethods={availableShippingMethods}
+          allowSubmit={localStateChanged}
+        />
+        {mode === "express" && <ProductsGroup onBuyNow={handleCreateCart} />}
+        {serverCart && (
+          <CartSummary
+            cart={serverCart}
+            onLoadCheckout={() =>
+              setCheckoutData({
+                cartId: serverCart.id,
+                currencyCode: serverCart.totalPrice.currencyCode,
+                countryCode:
+                  serverCart.country ??
+                  serverCart.billingAddress?.country ??
+                  serverCart.shippingAddress?.country ??
+                  CART_COUNTRY,
+              })
+            }
           />
-          {mode === "express" && <ProductsGroup onBuyNow={handleCreateCart} />}
-          {serverCart && (
-            <CartSummary
-              cart={serverCart}
-              onLoadCheckout={() =>
-                setCheckoutData({
-                  cartId: serverCart.id,
-                  currencyCode: serverCart.totalPrice.currencyCode,
-                  countryCode: serverCart.billingAddress?.country ?? CART_COUNTRY,
-                })
-              }
-            />
-          )}
-        </div>
+        )}
+      </div>
     </div>
   );
 };

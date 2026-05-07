@@ -18,7 +18,8 @@
     "@commercetools/ts-client": "^4.9.1",
     "node-fetch": "^3.3.2",
     "tailwindcss": "^4.2.4",
-    "@tailwindcss/vite": "^4.2.4"
+    "@tailwindcss/vite": "^4.2.4",
+    "@commercetools/checkout-browser-sdk": "1.7.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -45,6 +46,6 @@
     "playwright": "^1.59.1",
     "@vitest/browser-playwright": "^4.1.5",
     "@vitest/coverage-v8": "^4.1.5",
-    "prettier":"^3.8.3"
+    "prettier": "^3.8.3"
   }
 }

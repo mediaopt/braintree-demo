@@ -1,5 +1,4 @@
 import { fetchCoCoOAuthToken } from './auth';
-import { CART_COUNTRY } from '../constants';
 
 export interface CheckoutData {
   sessionId: string;
@@ -10,7 +9,7 @@ export interface CheckoutData {
   paymentMethods: unknown;
 }
 
-export const buildCheckoutData = async (cartId: string, currencyCode: string): Promise<CheckoutData> => {
+export const buildCheckoutData = async (cartId: string, currencyCode: string, countryCode: string): Promise<CheckoutData> => {
   const jwt = await fetchJwt();
   const [sessionId, paymentMethods] = await Promise.all([
     getSessionId(cartId),
@@ -21,7 +20,7 @@ export const buildCheckoutData = async (cartId: string, currencyCode: string): P
     processorUrl: import.meta.env.VITE_PROCESSOR_URL,
     merchantAccountId: import.meta.env.BRAINTREE_MERCHANT_ACCOUNT_ID,
     currencyCode,
-    countryCode: CART_COUNTRY,
+    countryCode,
     paymentMethods,
   };
 };

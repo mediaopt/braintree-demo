@@ -84,6 +84,11 @@ export const TriggerCheckoutButton = ({
       setCheckoutData({
         cartId: newCart.id,
         currencyCode: newCart.totalPrice.currencyCode,
+        countryCode:
+          newCart.country ??
+          newCart.billingAddress?.country ??
+          newCart.shippingAddress?.country ??
+          CART_COUNTRY,
       });
     } finally {
       setLoading(false);
