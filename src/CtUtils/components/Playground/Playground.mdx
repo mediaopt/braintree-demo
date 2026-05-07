@@ -1,0 +1,22 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+import * as PlaygroundStories from "./Playground.stories.tsx";
+
+<Meta of={PlaygroundStories} />
+
+# Playground
+
+The Playground is the main demo surface. It lets you configure a commercetools cart end-to-end and then hand it off to the Braintree checkout session.
+
+## Modes
+
+### Standard (Checkout)
+
+The default mode. A cart is created on mount. You can add products, adjust cart-level settings (country, tax mode, shipping, discounts), and then click **Load checkout** to start the Braintree payment session.
+
+### Buy Now
+
+Dedicated to buy a product directly from product page. Each product card has a **Buy Now** button — clicking it creates the cart with that product and immediately loads the checkout session. Intended to demo express / single-product checkout flows.
+
+### Vault without purchase
+
+No cart UI is rendered. A cart is created silently in the background with the default customer, and the checkout session loads directly. Intended to demo card-saving (vault) flows where no purchase amount is needed.

@@ -9,6 +9,7 @@ const authUrl = import.meta.env.VITE_CTP_AUTH_URL ?? "";
 const apiUrl = import.meta.env.VITE_CTP_API_URL ?? "";
 const scopes = [import.meta.env.VITE_CTP_SCOPE??""];
 
+
 // Auth Middleware Options
 const authMiddlewareOptions = {
     host: authUrl,

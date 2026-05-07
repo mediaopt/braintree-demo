@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { ShippingMethod } from "@commercetools/platform-sdk";
 import { formatPrice } from "../../../services/format";
-import type { OnLocalCartUpdate } from "../CartWrapper";
+import type { OnLocalCartUpdate } from "../Playground";
 import { RadioGroup } from "./RadioGroup";
 
 interface ShippingMethodsProps {

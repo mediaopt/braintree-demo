@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { CartWrapper, type CheckoutMode } from "./components/Playground/CartWrapper";
+import {
+  Playground,
+  type CheckoutMode,
+} from "./CtUtils/components/Playground/Playground";
 
 function App() {
   const [flow, setFlow] = useState<CheckoutMode>("standard");
@@ -7,7 +10,7 @@ function App() {
   const flowLabels: Record<CheckoutMode, string> = {
     standard: "Standard",
     express: "Express",
-    pureVault: "Pure Vault",
+    pureVault: "Vault Without Payment",
   };
 
   return (
@@ -26,7 +29,7 @@ function App() {
           </label>
         ))}
       </div>
-      <CartWrapper mode={flow} />
+      <Playground mode={flow} />
     </div>
   );
 }

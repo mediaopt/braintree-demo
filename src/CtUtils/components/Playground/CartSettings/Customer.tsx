@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { DEFAULT_CUSTOMER_ID } from "../../../constants";
-import type { OnLocalCartUpdate } from "../CartWrapper";
+import { DEFAULT_CUSTOMER_ID } from "../../../../constants";
+import type { OnLocalCartUpdate } from "../Playground";
 import { RadioGroup } from "./RadioGroup";
 
 const OPTIONS = [
   { value: "none", label: "Guest" },
-  { value: "existing", label: "Signed in" },
+  { value: "existing", label: "Signed in customer" },
 ];
 
 interface CustomerProps {

@@ -1,7 +1,7 @@
 import { type FC, useState } from "react";
-import type { OnLocalCartUpdate } from "../CartWrapper";
+import type { OnLocalCartUpdate } from "../Playground";
 import { RadioGroup } from "./RadioGroup";
-import { ADDRESSES } from "../../../constants.ts";
+import { ADDRESSES } from "../../../../constants.ts";
 
 const OPTIONS = [
   { value: "DE", label: "Germany" },

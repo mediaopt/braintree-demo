@@ -1,6 +1,6 @@
 import { type FC, useState } from "react";
 import type { TaxCalculationMode as TaxCalculationModeType } from "@commercetools/platform-sdk";
-import type { OnLocalCartUpdate } from "../CartWrapper";
+import type { OnLocalCartUpdate } from "../Playground";
 import { RadioGroup } from "./RadioGroup";
 
 const TAX_CALCULATION_MODES: TaxCalculationModeType[] = ["LineItemLevel", "UnitPriceLevel"];

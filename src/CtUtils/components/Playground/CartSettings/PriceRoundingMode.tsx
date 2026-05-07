@@ -1,5 +1,5 @@
 import { type FC, useState } from "react";
-import type { OnLocalCartUpdate } from "../CartWrapper";
+import type { OnLocalCartUpdate } from "../Playground";
 import { RadioGroup } from "./RadioGroup";
 
 const PRICE_ROUNDING_MODES = ["HalfEven", "HalfUp", "HalfDown"] as const;

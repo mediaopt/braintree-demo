@@ -3,7 +3,7 @@ import { formatPrice } from "../../services/format";
 import { type FC, useMemo } from "react";
 import { Button } from "../Button.tsx";
 import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
-import { DISCOUNT_CODES } from "../../constants";
+import { DISCOUNT_CODES } from "../../../constants";
 
 const getLocalizedString = (ls: Record<string, string>) =>
   ls["en"] ?? Object.values(ls)[0];
@@ -11,9 +11,14 @@ const getLocalizedString = (ls: Record<string, string>) =>
 interface CartSummaryProps {
   cart: Cart;
   onLoadCheckout: () => void;
+  cartError?: string;
 }
 
-export const CartSummary: FC<CartSummaryProps> = ({ cart, onLoadCheckout }) => {
+export const CartSummary: FC<CartSummaryProps> = ({
+  cart,
+  onLoadCheckout,
+  cartError,
+}) => {
   const { lineItems, shippingInfo, totalPrice, id } = cart;
   const hasAmount = (totalPrice?.centAmount ?? 0) > 0;
 
@@ -33,9 +38,9 @@ export const CartSummary: FC<CartSummaryProps> = ({ cart, onLoadCheckout }) => {
   );
 
   return (
-    <GroupWrapper title="Cart summary">
+    <GroupWrapper title={`Cart summary ${id}`}>
+      {cartError && <p className="accent-red-900">{cartError}</p>}
       <div className="flex justify-between">
-        <p>id: {id}</p>
         <div>
           {lineItems.map((item) => (
             <div key={item.id} className="flex gap-2">
@@ -51,32 +56,46 @@ export const CartSummary: FC<CartSummaryProps> = ({ cart, onLoadCheckout }) => {
             </div>
           ))}
         </div>
-
         <div>
-          {shippingInfo ? (
-            <span>
-              {shippingInfo.shippingMethodName} —{" "}
-              {formatPrice(
-                shippingInfo.price.centAmount,
-                shippingInfo.price.currencyCode,
-                shippingInfo.price.fractionDigits,
+          <div>
+            {shippingInfo ? (
+              <span>
+                {shippingInfo.shippingMethodName} —{" "}
+                {formatPrice(
+                  shippingInfo.price.centAmount,
+                  shippingInfo.price.currencyCode,
+                  shippingInfo.price.fractionDigits,
+                )}
+              </span>
+            ) : (
+              <span>No shipping</span>
+            )}
+          </div>
+
+          <div>
+            {cart.discountCodes.length ? (
+              cart.discountCodes.map((dc) => (
+                <div key={dc.discountCode.id}>
+                  {discountIdToName[dc.discountCode.id] ?? dc.discountCode.id}
+                </div>
+              ))
+            ) : (
+              <span>No cart discounts</span>
+            )}
+          </div>
+
+          <div>
+            {cart.priceRoundingMode &&
+              cart.priceRoundingMode !== "HalfEven" && (
+                <span>Rounding: {cart.priceRoundingMode}</span>
               )}
-            </span>
-          ) : (
-            <span>No shipping</span>
-          )}
-        </div>
-
-        <div>
-          {cart.discountCodes.length ? (
-            cart.discountCodes.map((dc) => (
-              <div key={dc.discountCode.id}>
-                {discountIdToName[dc.discountCode.id] ?? dc.discountCode.id}
-              </div>
-            ))
-          ) : (
-            <span>No cart discounts</span>
-          )}
+          </div>
+          <div>
+            {cart.taxCalculationMode &&
+              cart.taxCalculationMode !== "LineItemLevel" && (
+                <span>Tax: {cart.taxCalculationMode}</span>
+              )}
+          </div>
         </div>
 
         <Button

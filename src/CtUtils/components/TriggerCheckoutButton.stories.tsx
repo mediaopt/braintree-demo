@@ -65,8 +65,8 @@ const CART_SETTINGS_ARG_TYPES: any = {
     mapping: { Germany: "DE", USA: "US" },
     table: { category: "Cart settings" },
   },
-  signedIn: { control: "boolean", table: { category: "Cart settings" } },
-  applyDiscount: { control: "boolean", table: { category: "Cart settings" } },
+  signedIn: { name: "Signed in customer", control: "boolean", table: { category: "Cart settings" } },
+  applyDiscount: { name: "10% cart discount", control: "boolean", table: { category: "Cart settings" } },
   priceRoundingMode: {
     control: "select",
     options: ["HalfEven", "HalfUp", "HalfDown"],
@@ -89,7 +89,7 @@ const CART_SETTINGS_ARGS = {
 
 // --- Stories ---
 
-export const PureVault: Story = {
+export const VaultWithoutPayment: Story = {
   parameters: { controls: { disable: true } },
   args: {
     mode: "pureVault",

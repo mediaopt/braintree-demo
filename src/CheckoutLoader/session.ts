@@ -1,4 +1,4 @@
-import { fetchCoCoOAuthToken } from './auth';
+import { fetchCoCoOAuthToken } from '../CtUtils/services/auth';
 
 export interface CheckoutData {
   sessionId: string;

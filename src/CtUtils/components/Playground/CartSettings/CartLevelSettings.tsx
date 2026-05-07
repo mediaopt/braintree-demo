@@ -8,7 +8,7 @@ import { PriceRoundingMode } from "./PriceRoundingMode.tsx";
 import { TaxCalculationMode } from "./TaxCalculationMode.tsx";
 import { Country } from "./Country.tsx";
 import { Button } from "../../Button.tsx";
-import type { OnLocalCartUpdate } from "../CartWrapper.tsx";
+import type { OnLocalCartUpdate } from "../Playground.tsx";
 
 interface CartLevelSettingsProps {
   cartId?: string;

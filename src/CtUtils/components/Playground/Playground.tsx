@@ -12,12 +12,12 @@ import {
   CART_COUNTRY,
   DEFAULT_CUSTOMER_ID,
   ADDRESSES,
-} from "../../constants";
+} from "../../../constants";
 import { ProductsGroup } from "./ProductsGroup";
 import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
 import { CartSummary } from "./CartSummary";
 import { handleCartActions } from "./handleCartActions.ts";
-import { CheckoutLoader } from "../CheckoutLoader/CheckoutLoader.tsx";
+import { CheckoutLoader } from "../../../CheckoutLoader/CheckoutLoader.tsx";
 
 export type CheckoutMode = "standard" | "express" | "pureVault";
 
@@ -54,7 +54,6 @@ export type CartCheckoutData = {
 
 interface CartWrapperProps {
   mode: CheckoutMode;
-  customerId?: string;
 }
 
 const requiredCartDraftData: Pick<
@@ -66,10 +65,7 @@ const requiredCartDraftData: Pick<
   customerEmail: "guest@checkout.ct",
 };
 
-export const CartWrapper = ({
-  mode,
-  customerId = DEFAULT_CUSTOMER_ID,
-}: CartWrapperProps) => {
+export const Playground = ({ mode }: CartWrapperProps) => {
   const [localCartData, setLocalCartData] = useState<CartStateData>({});
   const [serverCart, setServerCart] = useState<Cart | undefined>(undefined);
   const [availableShippingMethods, setAvailableShippingMethods] =
@@ -77,6 +73,7 @@ export const CartWrapper = ({
   const [checkoutData, setCheckoutData] = useState<CartCheckoutData | null>(
     null,
   );
+  const [cartError, setCartError] = useState<string>();
 
   const localStateChanged = useMemo(
     () => Object.keys(localCartData).length > 0,
@@ -85,6 +82,7 @@ export const CartWrapper = ({
 
   useEffect(() => {
     setLocalCartData({});
+    setCartError(undefined);
   }, [serverCart]);
 
   useEffect(() => {
@@ -115,7 +113,7 @@ export const CartWrapper = ({
       ...requiredCartDraftData,
       ...localCartData,
       ...(productId && { lineItems: [{ productId, quantity: 1 }] }),
-      ...(mode === "pureVault" && { customerId }),
+      ...(mode === "pureVault" && { customerId: DEFAULT_CUSTOMER_ID }),
     };
 
     const { body } = await createCart(draft);
@@ -134,14 +132,19 @@ export const CartWrapper = ({
 
     const actions = handleCartActions(localCartData);
     if (actions.length === 0) return;
-
-    const { body: updatedCart } = await updateCartApi(
-      serverCart.id,
-      serverCart.version,
-      actions,
-    );
-    if (!updatedCart) return;
-    setServerCart(updatedCart);
+    try {
+      const response = await updateCartApi(
+        serverCart.id,
+        serverCart.version,
+        actions,
+      );
+      if (!response.body) {
+        return;
+      }
+      setServerCart(response.body);
+    } catch (error) {
+      setCartError((error as Error).message);
+    }
   };
 
   useEffect(() => {
@@ -177,6 +180,7 @@ export const CartWrapper = ({
         {serverCart && (
           <CartSummary
             cart={serverCart}
+            cartError={cartError}
             onLoadCheckout={() =>
               setCheckoutData({
                 cartId: serverCart.id,

@@ -36,7 +36,7 @@ export const removeProductFromCart = async (
     .post({
       body: {
         version: cartVersion,
-        actions: [{ action: "removeLineItem", lineItemId }],
+        actions: [{ action: "removeLineItem", lineItemId, quantity: 1 }],
       },
     })
     .execute();

@@ -8,6 +8,9 @@ const preview: Preview = {
         order: ['Introduction', 'Checkout', 'Playground'],
       },
     },
+    docs: {
+      toc: true,
+    },
     controls: {
       matchers: {
        color: /(background|color)$/i,
