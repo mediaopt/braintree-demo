@@ -42,6 +42,12 @@ export const handleCartActions = (
       customerId: localCartData.customerId,
     });
   }
+  if (localCartData.customerEmail !== undefined) {
+    actions.push({
+      action: "setCustomerEmail",
+      email: localCartData.customerEmail,
+    });
+  }
   if (localCartData.country !== undefined) {
     actions.push({
       action: "setCountry",

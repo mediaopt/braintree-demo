@@ -1,6 +1,7 @@
 import { type FC, useState } from "react";
 import type { OnLocalCartUpdate } from "../CartWrapper";
 import { RadioGroup } from "./RadioGroup";
+import { ADDRESSES } from "../../../constants.ts";
 
 const OPTIONS = [
   { value: "DE", label: "Germany" },
@@ -16,9 +17,10 @@ export const Country: FC<CountryProps> = ({ onCartUpdate }) => {
 
   const handleChange = (country: string) => {
     setValue(country);
+    const address = ADDRESSES[country] ?? { country };
     onCartUpdate({
-      billingAddress: { country },
-      shippingAddress: { country },
+      billingAddress: address,
+      shippingAddress: address,
     });
   };
 

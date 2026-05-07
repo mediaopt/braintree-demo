@@ -11,6 +11,7 @@ import {
   CART_CURRENCY,
   CART_COUNTRY,
   DEFAULT_CUSTOMER_ID,
+  ADDRESSES,
 } from "../../constants";
 import { ProductsGroup } from "./ProductsGroup";
 import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
@@ -33,6 +34,7 @@ export type CartStateData = Mutable<
       | "taxCalculationMode"
       | "inventoryMode"
       | "customerId"
+      | "customerEmail"
       | "billingAddress"
       | "shippingAddress"
     >
@@ -55,9 +57,13 @@ interface CartWrapperProps {
   customerId?: string;
 }
 
-const requiredCartDraftData: Pick<CartDraft, "currency" | "country"> = {
+const requiredCartDraftData: Pick<
+  CartDraft,
+  "currency" | "country" | "customerEmail"
+> = {
   currency: CART_CURRENCY,
   country: CART_COUNTRY,
+  customerEmail: "guest@checkout.ct",
 };
 
 export const CartWrapper = ({
@@ -100,6 +106,12 @@ export const CartWrapper = ({
 
     if (!shouldCreate) return;
     const draft: CartDraft = {
+      billingAddress:
+        (localCartData?.country && ADDRESSES[localCartData.country]) ||
+        ADDRESSES[CART_COUNTRY],
+      shippingAddress:
+        (localCartData?.country && ADDRESSES[localCartData.country]) ||
+        ADDRESSES[CART_COUNTRY],
       ...requiredCartDraftData,
       ...localCartData,
       ...(productId && { lineItems: [{ productId, quantity: 1 }] }),
