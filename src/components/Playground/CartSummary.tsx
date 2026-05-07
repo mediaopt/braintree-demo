@@ -14,7 +14,7 @@ interface CartSummaryProps {
 }
 
 export const CartSummary: FC<CartSummaryProps> = ({ cart, onLoadCheckout }) => {
-  const { lineItems, shippingInfo, totalPrice } = cart;
+  const { lineItems, shippingInfo, totalPrice, id } = cart;
   const hasAmount = (totalPrice?.centAmount ?? 0) > 0;
 
   const discountIdToName = useMemo(
@@ -35,6 +35,7 @@ export const CartSummary: FC<CartSummaryProps> = ({ cart, onLoadCheckout }) => {
   return (
     <GroupWrapper title="Cart summary">
       <div className="flex justify-between">
+        <p>id: {id}</p>
         <div>
           {lineItems.map((item) => (
             <div key={item.id} className="flex gap-2">
