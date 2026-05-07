@@ -38,7 +38,12 @@ export const CartSummary: FC<CartSummaryProps> = ({
   );
 
   return (
-    <GroupWrapper title={`Cart summary ${id}`}>
+    <GroupWrapper title="Cart summary">
+      <input
+        readOnly
+        value={id}
+        className="mx-auto w-75 text-center text-sm mb-4 bg-gray-200 outline-none cursor-text"
+      />
       {cartError && <p className="accent-red-900">{cartError}</p>}
       <div className="flex justify-between">
         <div>
