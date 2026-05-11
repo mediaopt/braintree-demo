@@ -1,20 +1,19 @@
-import type { Preview } from '@storybook/react-vite';
-import '../src/index.css';
+import type { Preview } from "@storybook/react-vite";
 
 const preview: Preview = {
   parameters: {
     options: {
       storySort: {
-        order: ['Introduction', 'Checkout', 'Playground'],
+        order: ["Introduction", "Checkout", "Playground"],
       },
     },
     docs: {
-      toc: true,
+      toc: false, //in reasonable age storybook version the bug does not allow to turn TOC off for some stories, so it is off for all and manually added only if the story is long enough to require it
     },
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
   },

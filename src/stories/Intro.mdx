@@ -10,7 +10,13 @@ It covers the full pre-payment cart setup flow — product selection, shipping, 
 
 - [Setup](#setup)
 - [Structure](#structure)
-- [Glossary](#glossary)
+  - [Checkout modes](#checkout-modes)
+- [Storybook](#storybook)
+  - [Flows](#flows)
+    - [Standard (Checkout)](#standard-checkout)
+    - [Buy Now](#buy-now)
+    - [Vault without purchase](#vault-without-purchase)
+  - [Cart settings](#cart-settings)
 
 ## Setup
 
@@ -102,7 +108,7 @@ Create a `.env` file in the project root with the following variables:
   </tbody>
 </table>
 
-You will also need to replace the hardcoded ids from this demo with the corresponding ones from your commercetools project.
+You will also need to replace the hardcoded ids from this demo with the corresponding ones from your commercetools project (file constants.ts in root folder).
 
 ## Structure
 
@@ -112,16 +118,6 @@ We only provide cart creation in order to demonstrate the full flow from product
 
 The real implementation of the checkout session is covered by the `CheckoutLoader` component, which is used in both modes.
 
-### Checkout requirements
-
-A valid commercetools cart is required to start the checkout session. This incudes:
-
-- For standard checkout: cart total price above 0, shipping address, billing address and customer email.
-- For buy now: cart total price above 0.
-- For vault without purchase: cart must be associated with commercetools customer and have price 0. For actually making payment and saving the token please refer to standard checkout flow.
-
-## Glossary
-
 ### Checkout modes
 
 - Standard: commercetools standard checkout flow, must be called from a checkout page.
@@ -129,7 +125,39 @@ A valid commercetools cart is required to start the checkout session. This incud
 
 See also commercetools documentation for [checkout](https://docs.commercetools.com/checkout/connectors-and-applications).
 
-### Cart settings
+## Storybook
+
+The demo is built with Storybook, which allows to easily test different scenarios and configurations. All payments supported by the Braintree connector are available in this Storybook, and you can also adjust the cart settings to see how they affect the checkout flow. We have two main demo modes - Chekout and playgorund.
+
+Checkout mode gives the end-to-end checkout experience starting from the moment the сustomer clicks the checkout button and until the payment is completed. It utilized minimalistic cart configuration with storybook controls. Playground gives more visual experience of the cart configuration and covers the settings, that should be loaded dynamically, such as shipping for different countries.
+
+Both modes are configured to demonstrate the three following checkout flows:
+
+### Flows
+
+A valid commercetools cart is required to start the checkout session, but different flows have different additional requirements. The default checkout mode settings will automatically satisfy the requirements for all flows.
+
+#### Standard (Checkout)
+
+**_Cart requirements: cart total price above 0, shipping address, billing address and customer email_**
+
+The default mode. You can add products, adjust cart-level settings (country, tax mode, shipping, discounts), and then click **Load checkout** to start the Braintree payment session. In the Playground mode a cart is created on mount and can be edited later, in checkout mode - upon button press the cart is created with all predefined settings.
+
+#### Buy Now
+
+**_Cart requirements: cart total price above 0, cart has country and currency set_**
+
+Dedicated to buy a product directly from product page. In checkout mode only one product can be selected for this mode. In playground mode each product card has a **Buy Now** button — clicking it creates the cart with that product and immediately loads the checkout session.
+
+#### Vault without purchase
+
+**_Cart requirements: cart must be associated with commercetools customer and have price 0. Price above 0 will trigger checkout AND vault on success_**
+
+No cart UI is rendered. A cart is created silently in the background with the default customer, and the checkout session loads directly. Intended to demo card-saving (vault) flows where no purchase amount is needed.
+
+### Demo Cart
+
+In our demo we include both standard shop features, such as product selection and shipping, and some of the more advanced features that are usually set on at least shop level or even project level. We simplify the things not directly relevant for payment process, such as setting the country also sets a random address within this country.
 
 - Products: we use for the demo the products with some distinctive features, namely:
   - Standard product, which is has no custom features and serves as a baseline for testing the checkout flow.

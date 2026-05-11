@@ -42,7 +42,7 @@ export const CartSummary: FC<CartSummaryProps> = ({
       <input
         readOnly
         value={id}
-        className="mx-auto w-75 text-center text-sm mb-4 bg-gray-200 outline-none cursor-text"
+        className="block mx-auto w-75 text-center text-sm mb-4 bg-gray-200 outline-none cursor-text"
       />
       {cartError && <p className="accent-red-900">{cartError}</p>}
       <div className="flex justify-between">
