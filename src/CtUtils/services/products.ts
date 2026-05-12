@@ -1,4 +1,4 @@
-import { apiRoot } from "../clent/ctAPI.ts";
+import { apiRoot } from "../client/ctAPI.ts";
 import type { ClientResponse } from "@commercetools/ts-client";
 import type { Cart, Product } from "@commercetools/platform-sdk";
 
