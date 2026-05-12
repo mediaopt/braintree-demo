@@ -44,7 +44,7 @@ export const CartSummary: FC<CartSummaryProps> = ({
         value={id}
         className="block mx-auto w-75 text-center text-sm mb-4 bg-gray-200 outline-none cursor-text"
       />
-      {cartError && <p className="accent-red-900">{cartError}</p>}
+      {cartError && <p className="text-red-900">{cartError}</p>}
       <div className="flex justify-between">
         <div>
           {lineItems.map((item) => (
@@ -105,7 +105,7 @@ export const CartSummary: FC<CartSummaryProps> = ({
 
         <Button
           action={onLoadCheckout}
-          disabled={!hasAmount}
+          disabled={!hasAmount || !!cartError}
           title={`Load checkout ${formatPrice(
             totalPrice.centAmount,
             totalPrice.currencyCode,
