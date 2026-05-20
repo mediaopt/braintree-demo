@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --https --ssl-cert localhost.crt --ssl-key localhost.key",
     "build-storybook": "storybook build"
   },
   "dependencies": {
