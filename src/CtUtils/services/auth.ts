@@ -9,12 +9,15 @@ export const fetchCoCoOAuthToken = async (): Promise<string | undefined> => {
   const body = new URLSearchParams();
   body.append('grant_type', 'client_credentials');
 
-  const response = await fetch(`${import.meta.env.VITE_CTP_AUTH_URL}/oauth/token`, {
-    method: 'POST',
-    headers,
-    body,
-    redirect: 'follow',
-  });
+  const response = await fetch(
+    `https://auth.${import.meta.env.VITE_CTP_REGION}.commercetools.com/oauth/token`,
+    {
+      method: "POST",
+      headers,
+      body,
+      redirect: "follow",
+    },
+  );
 
   const token = await response.json();
 
