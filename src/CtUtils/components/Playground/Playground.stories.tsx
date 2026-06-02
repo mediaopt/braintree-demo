@@ -7,14 +7,10 @@ const meta = {
   args: {},
   argTypes: {
     mode: {
-      options: ["standard", "express", "pureVault"],
+      options: Object.keys(labelMap),
       control: {
         type: "radio",
-        labels: {
-          standard: "Standard",
-          express: "Buy now",
-          pureVault: "Vault without purchase",
-        },
+        labels: labelMap,
       },
     },
   },
@@ -23,8 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Checkout: Story = {
+export const Default: Story = {
   args: {
-    mode: "standard",
+    mode: "fullCheckout",
   },
 };

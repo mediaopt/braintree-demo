@@ -30,10 +30,12 @@ type CartSettingsArgs = {
 
 interface StandardWrapperProps extends CartSettingsArgs {
   quantities: Record<QuantityKey, number>;
+  mode: "fullCheckout" | "paymentOnly";
 }
 
 const StandardWrapper: FC<StandardWrapperProps> = ({
   quantities,
+  mode,
   country,
   signedIn,
   applyDiscount,
@@ -46,7 +48,7 @@ const StandardWrapper: FC<StandardWrapperProps> = ({
 
   return (
     <TriggerCheckoutButton
-      mode="standard"
+      mode={mode}
       products={products}
       country={country}
       signedIn={signedIn}

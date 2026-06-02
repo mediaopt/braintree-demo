@@ -1,4 +1,5 @@
 import type { Address } from "@commercetools/platform-sdk";
+import type { BraintreeCheckoutMode } from "./types.ts";
 
 export const DEFAULT_CUSTOMER_ID = "2d83f470-fb59-4f9e-ab71-dd27b30ef266";
 
@@ -37,4 +38,11 @@ export const ADDRESSES: Record<string, Address> = {
     state: "NY",
     country: "US",
   },
+};
+
+export const labelMap: Record<BraintreeCheckoutMode, string> = {
+  fullCheckout: "Checkout",
+  paymentOnly: "Payment",
+  express: "Buy now",
+  pureVault: "Vault without purchase",
 };

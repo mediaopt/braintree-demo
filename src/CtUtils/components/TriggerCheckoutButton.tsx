@@ -5,14 +5,15 @@ import type {
   TaxCalculationMode,
 } from "@commercetools/platform-sdk";
 import { createCart } from "../services/cart";
-import type { CartCheckoutData, CheckoutMode } from "./Playground/Playground";
 import {
   CART_CURRENCY,
   CART_COUNTRY,
   DEFAULT_CUSTOMER_ID,
-  DISCOUNT_CODES,
+  DISCOUNT_CODES, labelMap
 } from "../../constants";
 import { Button } from "./Button.tsx";
+import { CheckoutLoader } from "../../CheckoutLoader/CheckoutLoader.tsx";
+import type { BraintreeCheckoutMode, CartCheckoutData } from "../../types.ts";
 
 interface LineItem {
   productId: string;
@@ -20,7 +21,7 @@ interface LineItem {
 }
 
 interface TriggerCheckoutButtonProps {
-  mode: CheckoutMode;
+  mode: BraintreeCheckoutMode;
   products?: LineItem[];
   productId?: string;
   country?: string;
@@ -29,12 +30,6 @@ interface TriggerCheckoutButtonProps {
   priceRoundingMode?: RoundingMode;
   taxCalculationMode?: TaxCalculationMode;
 }
-
-const labelMap: Record<CheckoutMode, string> = {
-  standard: "Checkout",
-  express: "Buy now",
-  pureVault: "Save for later",
-};
 
 export const TriggerCheckoutButton = ({
   mode,
@@ -89,6 +84,7 @@ export const TriggerCheckoutButton = ({
           newCart.billingAddress?.country ??
           newCart.shippingAddress?.country ??
           CART_COUNTRY,
+        mode,
       });
     } finally {
       setLoading(false);

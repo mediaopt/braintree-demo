@@ -18,8 +18,7 @@ import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
 import { CartSummary } from "./CartSummary";
 import { handleCartActions } from "./handleCartActions.ts";
 import { CheckoutLoader } from "../../../CheckoutLoader/CheckoutLoader.tsx";
-
-export type CheckoutMode = "standard" | "express" | "pureVault";
+import type { BraintreeCheckoutMode, CartCheckoutData } from "../../../types.ts";
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
@@ -46,14 +45,8 @@ export type CartStateData = Mutable<
 
 export type OnLocalCartUpdate = (partial: Partial<CartStateData>) => void;
 
-export type CartCheckoutData = {
-  cartId: string;
-  currencyCode: string;
-  countryCode: string;
-};
-
 interface CartWrapperProps {
-  mode: CheckoutMode;
+  mode: BraintreeCheckoutMode;
 }
 
 const requiredCartDraftData: Pick<
@@ -96,11 +89,13 @@ export const Playground = ({ mode }: CartWrapperProps) => {
     });
   }, [serverCart?.billingAddress?.country]);
 
+  const isStandardMode = useMemo(
+    () => mode === "fullCheckout" || mode === "paymentOnly",
+    [mode],
+  );
+
   const handleCreateCart = async (productId?: string) => {
-    const shouldCreate =
-      mode === "pureVault" ||
-      !serverCart?.id ||
-      (productId && (serverCart.lineItems?.length ?? 0) >= 1);
+    const shouldCreate = mode === "pureVault" || !serverCart?.id || productId;
 
     if (!shouldCreate) return;
     const draft: CartDraft = {
@@ -119,11 +114,12 @@ export const Playground = ({ mode }: CartWrapperProps) => {
     const { body } = await createCart(draft);
     if (!body) return;
     setServerCart(body);
-    if (mode !== "standard")
+    if (!isStandardMode)
       setCheckoutData({
         cartId: body.id,
         currencyCode: body.totalPrice.currencyCode,
         countryCode: body.billingAddress?.country ?? CART_COUNTRY,
+        mode,
       });
   };
 
@@ -166,35 +162,42 @@ export const Playground = ({ mode }: CartWrapperProps) => {
   ) : (
     <div className="p-4 sm:p-8">
       <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
-        {mode === "standard" && (
+        {isStandardMode && (
           <ProductsGroup cart={serverCart} onMoveProduct={setServerCart} />
         )}
-        <CartLevelSettings
-          cartId={serverCart?.id}
-          onCartUpdate={setLocalCartData}
-          onSubmit={mode === "standard" ? updateCart : undefined}
-          availableShippingMethods={availableShippingMethods}
-          allowSubmit={localStateChanged}
-        />
+        {mode !== "pureVault" && (
+          <CartLevelSettings
+            cartId={serverCart?.id}
+            onCartUpdate={setLocalCartData}
+            onSubmit={isStandardMode ? updateCart : undefined}
+            availableShippingMethods={availableShippingMethods}
+            allowSubmit={localStateChanged}
+          />
+        )}
         {mode === "express" && <ProductsGroup onBuyNow={handleCreateCart} />}
-        {serverCart && (
+        {serverCart && mode !== "pureVault" && (
           <CartSummary
             cart={serverCart}
             cartError={cartError}
-            onLoadCheckout={() =>
-              setCheckoutData({
-                cartId: serverCart.id,
-                currencyCode: serverCart.totalPrice.currencyCode,
-                countryCode:
-                  serverCart.country ??
-                  serverCart.billingAddress?.country ??
-                  serverCart.shippingAddress?.country ??
-                  CART_COUNTRY,
-              })
+            onLoadCheckout={
+              isStandardMode
+                ? () =>
+                    setCheckoutData({
+                      mode,
+                      cartId: serverCart.id,
+                      currencyCode: serverCart.totalPrice.currencyCode,
+                      countryCode:
+                        serverCart.country ??
+                        serverCart.billingAddress?.country ??
+                        serverCart.shippingAddress?.country ??
+                        CART_COUNTRY,
+                    })
+                : undefined
             }
           />
         )}
       </div>
+      {checkoutData && <CheckoutLoader {...checkoutData} />}
     </div>
   );
 };

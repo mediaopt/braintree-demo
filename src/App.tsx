@@ -1,31 +1,24 @@
 import { useState } from "react";
-import {
-  Playground,
-  type CheckoutMode,
-} from "./CtUtils/components/Playground/Playground";
+import { Playground } from "./CtUtils/components/Playground/Playground";
+import { labelMap } from "./constants.ts";
+import type { BraintreeCheckoutMode } from "./types.ts";
 
 function App() {
-  const [flow, setFlow] = useState<CheckoutMode>("standard");
-
-  const flowLabels: Record<CheckoutMode, string> = {
-    standard: "Standard",
-    express: "Express",
-    pureVault: "Vault Without Payment",
-  };
+  const [flow, setFlow] = useState<BraintreeCheckoutMode>("paymentOnly");
 
   return (
     <div className="p-4 sm:p-8">
       <div className="flex justify-between">
-        {(["standard", "express", "pureVault"] as CheckoutMode[]).map((f) => (
-          <label key={f} className="cursor-pointer">
+        {(Object.keys(labelMap) as BraintreeCheckoutMode[]).map((label) => (
+          <label key={label} className="cursor-pointer">
             <input
               type="radio"
-              value={f}
-              checked={flow === f}
-              onChange={() => setFlow(f)}
+              value={label}
+              checked={flow === label}
+              onChange={() => setFlow(label)}
               className="mr-2"
             />
-            {flowLabels[f]}
+            {labelMap[label]}
           </label>
         ))}
       </div>
