@@ -3,7 +3,7 @@ export const getSessionId = async (cartId: string): Promise<string> => {
   const oAuthToken = await fetchCoCoOAuthToken();
 
   const res = await fetch(
-    `${import.meta.env.VITE_CTP_SESSION_URL}/${import.meta.env.VITE_CTP_PROJECT_KEY}/sessions`,
+    `https://session.${import.meta.env.VITE_CTP_REGION}.commercetools.com/${import.meta.env.VITE_CTP_PROJECT_KEY}/sessions`,
     {
       method: "POST",
       headers: {
