@@ -4,9 +4,7 @@ import { Meta } from "@storybook/addon-docs/blocks";
 
 # Braintree Payment Demo
 
-This project is a minimalistic demo environment for Braintree payment methods integrated with commercetools.
-
-It covers the full pre-payment cart setup flow — product selection, shipping, discounts, customer assignment — and then initialises a Braintree checkout session to render the actual payment components.
+This demo is intended to showcase the Braintree payment methods integration with commercetools. It covers the checkout session implementation and flows for different payment methods, as well as some of the project/shop level settings supported by the Braintree commercetools connector.
 
 - [Setup](#setup)
 - [Structure](#structure)
@@ -20,13 +18,13 @@ It covers the full pre-payment cart setup flow — product selection, shipping, 
 
 ## Setup
 
-Our own demo environment is already provided. To test it with your own commercetools project, you can clone the repository and set up your own environment variables.
+Our own demo environment is already provided. To test it with your own commercetools project, you can clone the repository and set up your own environment variables, install the Braintree commercetools checkout connector for your project and create checkout application.
 
 We strongly recommend to use for this demo the API client with commercetools checkout permissions only, to avoid any unwanted side effects on your commercetools project.
 
 We use Vite for the development environment, so the environment variables should be prefixed with `VITE_` to be available in the code. If your shop is built with a different technology, you can adjust the environment variable names.
 
-Create a `.env` file in the project root with the following variables:
+**Required for checkout** — passed when initializing the commercetools checkout session:
 
 <table>
   <thead>
@@ -38,10 +36,41 @@ Create a `.env` file in the project root with the following variables:
   <tbody>
     <tr>
       <td>
+        <code>VITE_CTP_APPLICATION_KEY</code>
+      </td>
+      <td>
+        commercetools checkout application key, passed when creating the
+        checkout session — create it in the Merchant Center if you don't have one
+      </td>
+    </tr>
+    <tr>
+      <td>
         <code>VITE_CTP_PROJECT_KEY</code>
       </td>
       <td>commercetools project key</td>
     </tr>
+    <tr>
+      <td>
+        <code>VITE_CTP_REGION</code>
+      </td>
+      <td>
+        commercetools region (e.g. <code>europe-west1.gcp</code>) — used to
+        construct the auth and API base URLs
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Used for this demo only** — not needed by the Enabler, but required for cart creation in the demo:
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
       <td>
         <code>VITE_CTP_CLIENT_ID</code>
@@ -56,54 +85,9 @@ Create a `.env` file in the project root with the following variables:
     </tr>
     <tr>
       <td>
-        <code>VITE_CTP_AUTH_URL</code>
-      </td>
-      <td>
-        commercetools auth URL (e.g.{" "}
-        <code>https://auth.europe-west1.gcp.commercetools.com</code>)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>VITE_CTP_API_URL</code>
-      </td>
-      <td>
-        commercetools API URL (e.g.{" "}
-        <code>https://api.europe-west1.gcp.commercetools.com</code>)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>VITE_CTP_SESSION_URL</code>
-      </td>
-      <td>
-        commercetools session API URL (e.g.{" "}
-        <code>https://session.europe-west1.gcp.commercetools.com</code>)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>VITE_PROCESSOR_URL</code>
-      </td>
-      <td>
-        Braintree processor URL - you will get it when you deploy your checkout
-        connector at commercetools.
-      </td>
-    </tr>
-    <tr>
-      <td>
         <code>VITE_CTP_SCOPE</code>
       </td>
-      <td>
-        commercetools API client scope - is not directly needed for the Checkout
-        itself, but we use it in demo for initializing the client
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>VITE_BRAINTREE_MERCHANT_ACCOUNT_ID</code>
-      </td>
-      <td>Braintree merchant account ID</td>
+      <td>commercetools API client scope</td>
     </tr>
   </tbody>
 </table>
@@ -151,7 +135,7 @@ Dedicated to buy a product directly from product page. In checkout mode only one
 
 #### Vault without purchase
 
-**_Cart requirements: cart must be associated with commercetools customer and have price 0. Price above 0 will trigger checkout AND vault on success_**
+**_Cart requirements: cart must be associated with commercetools customer and have price 0._**
 
 No cart UI is rendered. A cart is created silently in the background with the default customer, and the checkout session loads directly. Intended to demo card-saving (vault) flows where no purchase amount is needed.
 
@@ -169,7 +153,7 @@ See also commercetools documentation for [product](https://docs.commercetools.co
 
 The price shown next to each product in the Playground is taken from the default **master variant** of that product. Commercetools supports country-specific and channel-specific prices, so the actual amount charged during checkout may differ once a billing country is set, please see a cart summary for an actual price.
 
-- Country: sets the country for the cart, which can affect the prices and shipping options. As this is a demo, we only support two countries - Germany and the US. Also it automatically sets the billing and shipping addresses with a corresponding country (not required for vault without purchase).
+- Country: sets the country for the cart, which can affect the prices and shipping options. As this is a demo, we support limited amount of countries and shipping options. Also it automatically sets the billing and shipping addresses with a corresponding country (not required for vault without purchase).
 - Signed in customer: assigns a customer to the cart, which is required for vault without purchase flow. If the connector has vaulting enabled and customer is signed in - PayPal and Credit card will provide the saved payments automatically.
 
 Other settings directly correspond to the [commercetools cart properties](https://docs.commercetools.com/api/projects/carts).

@@ -14,18 +14,10 @@ Install dependencies:
 npm install
 ```
 
-Create a `.env` file in the project root:
+Copy `env.template` to `.env` in the project root and fill in your values:
 
-```env
-VITE_CTP_PROJECT_KEY=
-VITE_CTP_CLIENT_ID=
-VITE_CTP_CLIENT_SECRET=
-VITE_CTP_AUTH_URL=
-VITE_CTP_API_URL=
-VITE_CTP_SESSION_URL=
-CTP_SCOPE=
-VITE_PROCESSOR_URL=
-BRAINTREE_MERCHANT_ACCOUNT_ID=
+```bash
+cp env.template .env
 ```
 
 ## Commands
