@@ -28,6 +28,15 @@ export const ADDRESSES: Record<string, Address> = {
     city: "Berlin",
     country: "DE",
   },
+  NL: {
+    firstName: "Max",
+    lastName: "Mustermann",
+    streetName: "Musterstraße",
+    streetNumber: "1",
+    postalCode: "10115",
+    city: "Amsterdam",
+    country: "NL",
+  },
   US: {
     firstName: "John",
     lastName: "Doe",
