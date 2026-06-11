@@ -20,12 +20,22 @@ export const updateCart = async (
   cartVersion: number,
   actions: CartUpdateAction[],
 ): Promise<ClientResponse<Cart>> => {
-  return apiRoot
-    .carts()
-    .withId({ ID: cartId })
-    .post({
-      body: { version: cartVersion, actions },
-      queryArgs: { expand: ["discountCodes[*].discountCode"] },
-    })
-    .execute();
+  const attempt = (version: number) =>
+    apiRoot
+      .carts()
+      .withId({ ID: cartId })
+      .post({
+        body: { version, actions },
+        queryArgs: { expand: ["discountCodes[*].discountCode"] },
+      })
+      .execute();
+
+  try {
+    return await attempt(cartVersion);
+  } catch (error) {
+    if ((error as { statusCode?: number }).statusCode !== 409) throw error;
+    const { body: freshCart } = await getCart(cartId);
+    if (!freshCart) throw error;
+    return attempt(freshCart.version);
+  }
 };
