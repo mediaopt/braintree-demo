@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006 --https --ssl-cert localhost.crt --ssl-key localhost.key",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "serve-return": "node serve-return.mjs"
   },
   "dependencies": {
     "react": "^19.2.5",
