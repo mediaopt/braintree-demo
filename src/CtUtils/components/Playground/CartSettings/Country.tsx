@@ -6,6 +6,7 @@ import { ADDRESSES } from "../../../../constants.ts";
 const OPTIONS = [
   { value: "DE", label: "Germany" },
   { value: "US", label: "USA" },
+  { value: "NL", label: "Netherlands" },
 ];
 
 interface CountryProps {
