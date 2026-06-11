@@ -1,5 +1,5 @@
 import { type FC, useState } from "react";
-import type { OnLocalCartUpdate } from "../Playground";
+import type { OnLocalCartUpdate } from "../../../../types";
 import { RadioGroup } from "./RadioGroup";
 import { ADDRESSES } from "../../../../constants.ts";
 

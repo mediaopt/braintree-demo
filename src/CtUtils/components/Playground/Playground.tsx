@@ -1,62 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
   Cart,
-  CartDraft,
   ShippingMethod,
-  ShippingMethodResourceIdentifier,
 } from "@commercetools/platform-sdk";
 import { createCart, updateCart as updateCartApi } from "../../services/cart";
 import { getShippingMethods } from "../../services/shipping";
 import {
-  CART_CURRENCY,
   CART_COUNTRY,
-  DEFAULT_CUSTOMER_ID,
-  ADDRESSES,
 } from "../../../constants";
 import { ProductsGroup } from "./ProductsGroup";
 import { CartLevelSettings } from "./CartSettings/CartLevelSettings";
 import { CartSummary } from "./CartSummary";
 import { handleCartActions } from "./handleCartActions.ts";
 import { CheckoutLoader } from "../../../CheckoutLoader/CheckoutLoader.tsx";
-import type { BraintreeCheckoutMode, CartCheckoutData } from "../../../types.ts";
-
-type Mutable<T> = { -readonly [P in keyof T]: T[P] };
-
-export type CartStateData = Mutable<
-  Partial<
-    Pick<
-      Cart,
-      | "country"
-      | "taxMode"
-      | "priceRoundingMode"
-      | "taxRoundingMode"
-      | "taxCalculationMode"
-      | "inventoryMode"
-      | "customerId"
-      | "customerEmail"
-      | "billingAddress"
-      | "shippingAddress"
-    >
-  >
-> & {
-  shippingMethod?: ShippingMethodResourceIdentifier;
-  discountCodes?: string[];
-};
-
-export type OnLocalCartUpdate = (partial: Partial<CartStateData>) => void;
+import type { BraintreeCheckoutMode, CartCheckoutData, CartStateData, OnLocalCartUpdate } from "../../../types.ts";
+import { buildCheckoutData } from "../../services/checkout";
+import { buildPlaygroundCartDraft } from "./cartDraft";
 
 interface CartWrapperProps {
   mode: BraintreeCheckoutMode;
 }
-
-const requiredCartDraftData: Pick<
-  CartDraft,
-  "currency" | "country" | "customerEmail"
-> = {
-  currency: CART_CURRENCY,
-  country: CART_COUNTRY,
-  customerEmail: "guest@checkout.ct",
-};
 
 export const Playground = ({ mode }: CartWrapperProps) => {
   const [localCartData, setLocalCartData] = useState<CartStateData>({});
@@ -96,31 +59,11 @@ export const Playground = ({ mode }: CartWrapperProps) => {
 
   const handleCreateCart = async (productId?: string) => {
     const shouldCreate = mode === "pureVault" || !serverCart?.id || productId;
-
     if (!shouldCreate) return;
-    const draft: CartDraft = {
-      billingAddress:
-        (localCartData?.country && ADDRESSES[localCartData.country]) ||
-        ADDRESSES[CART_COUNTRY],
-      shippingAddress:
-        (localCartData?.country && ADDRESSES[localCartData.country]) ||
-        ADDRESSES[CART_COUNTRY],
-      ...requiredCartDraftData,
-      ...localCartData,
-      ...(productId && { lineItems: [{ productId, quantity: 1 }] }),
-      ...(mode === "pureVault" && { customerId: DEFAULT_CUSTOMER_ID }),
-    };
-
-    const { body } = await createCart(draft);
+    const { body } = await createCart(buildPlaygroundCartDraft(localCartData, mode, productId));
     if (!body) return;
     setServerCart(body);
-    if (!isStandardMode)
-      setCheckoutData({
-        cartId: body.id,
-        currencyCode: body.totalPrice.currencyCode,
-        countryCode: body.billingAddress?.country ?? CART_COUNTRY,
-        mode,
-      });
+    if (!isStandardMode) setCheckoutData(buildCheckoutData(body, mode));
   };
 
   const updateCart = async () => {
@@ -181,17 +124,7 @@ export const Playground = ({ mode }: CartWrapperProps) => {
             cartError={cartError}
             onLoadCheckout={
               isStandardMode
-                ? () =>
-                    setCheckoutData({
-                      mode,
-                      cartId: serverCart.id,
-                      currencyCode: serverCart.totalPrice.currencyCode,
-                      countryCode:
-                        serverCart.country ??
-                        serverCart.billingAddress?.country ??
-                        serverCart.shippingAddress?.country ??
-                        CART_COUNTRY,
-                    })
+                ? () => setCheckoutData(buildCheckoutData(serverCart, mode))
                 : undefined
             }
           />

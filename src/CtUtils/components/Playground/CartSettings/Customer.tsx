@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DEFAULT_CUSTOMER_ID } from "../../../../constants";
-import type { OnLocalCartUpdate } from "../Playground";
+import type { OnLocalCartUpdate } from "../../../../types";
 import { RadioGroup } from "./RadioGroup";
 
 const OPTIONS = [

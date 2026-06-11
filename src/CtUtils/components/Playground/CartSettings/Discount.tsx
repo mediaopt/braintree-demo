@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { DISCOUNT_CODES } from '../../../../constants';
-import type { OnLocalCartUpdate } from '../Playground';
+import type { OnLocalCartUpdate } from '../../../../types';
 
 interface DiscountProps {
   onCartUpdate: OnLocalCartUpdate;
