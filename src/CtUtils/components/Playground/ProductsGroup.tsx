@@ -1,4 +1,3 @@
-import type { Cart } from "@commercetools/platform-sdk";
 import { ProductCard } from "./ProductCard";
 import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
 
@@ -19,29 +18,15 @@ export const PRODUCTS = [
 ];
 
 interface ProductsGroupProps {
-  cart?: Cart;
-  onMoveProduct?: (cart?: Cart) => void;
-  onBuyNow?: (productId: string) => Promise<void>;
+  isExpress?: boolean;
 }
 
-export const ProductsGroup = ({
-  cart,
-  onMoveProduct,
-  onBuyNow,
-}: ProductsGroupProps) => {
+export const ProductsGroup = ({ isExpress }: ProductsGroupProps) => {
   return (
-    <GroupWrapper
-      title={onBuyNow ? "Choose product to buy now" : "Choose cart product(s)"}
-    >
+    <GroupWrapper title={isExpress ? "Choose product to buy now" : "Choose cart product(s)"}>
       <div className="flex p-4 mx-auto justify-between">
         {PRODUCTS.map(({ id }) => (
-          <ProductCard
-            key={id}
-            productId={id}
-            cart={cart}
-            onMoveProduct={onMoveProduct}
-            onBuyNow={onBuyNow ? () => onBuyNow(id) : undefined}
-          />
+          <ProductCard key={id} productId={id} isExpress={isExpress} />
         ))}
       </div>
     </GroupWrapper>

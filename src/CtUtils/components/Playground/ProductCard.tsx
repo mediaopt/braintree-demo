@@ -80,8 +80,27 @@ export const ProductCard = ({ productId, isExpress }: ProductCardProps) => {
         <span className="text-sm font-medium">(X: {currentQuantity})</span>
       </div>
 
-      {onBuyNow ? (
-        <Button action={onBuyNow} title="Buy now" />
+      {isExpress ? (
+        <div data-ctc-express="PayPal">
+          <Button
+            action={async () => {
+              const newCart = (
+                await createCart({
+                  ...cartDraftFromLocal(localCartData),
+                  lineItems: [{ productId, quantity: 1 }],
+                })
+              ).body;
+              if (!newCart) throw new Error("Could not create cart");
+              else {
+                loadExpress({
+                  cartId: newCart?.id,
+                  cartDraft: cartDraftFromLocal(localCartData),
+                });
+              }
+            }}
+            title="Buy now"
+          />
+        </div>
       ) : (
         <div className="flex justify-between">
           <Button action={handleAdd} title="Add" />
