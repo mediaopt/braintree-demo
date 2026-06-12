@@ -47,6 +47,15 @@ export const ADDRESSES: Record<string, Address> = {
     state: "NY",
     country: "US",
   },
+  PL: {
+    firstName: "Jan",
+    lastName: "Kowalski",
+    streetName: "Marszałkowska",
+    streetNumber: "10",
+    postalCode: "00-001",
+    city: "Warszawa",
+    country: "PL",
+  },
 };
 
 export const labelMap: Record<BraintreeCheckoutMode, string> = {

@@ -35,6 +35,7 @@ export type CartStateData = Mutable<
 > & {
   shippingMethod?: ShippingMethodResourceIdentifier;
   discountCodes?: string[];
+  currency?: string;
 };
 
 export type OnLocalCartUpdate = (partial: Partial<CartStateData>) => void;

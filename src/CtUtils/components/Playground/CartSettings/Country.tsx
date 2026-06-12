@@ -7,6 +7,7 @@ const OPTIONS = [
   { value: "DE", label: "Germany" },
   { value: "US", label: "USA" },
   { value: "NL", label: "Netherlands" },
+  { value: "PL", label: "Poland" },
 ];
 
 interface CountryProps {
@@ -20,8 +21,10 @@ export const Country: FC<CountryProps> = ({ onCartUpdate }) => {
     setValue(country);
     const address = ADDRESSES[country] ?? { country };
     onCartUpdate({
+      country,
       billingAddress: address,
       shippingAddress: address,
+      currency: country === "PL" ? "PLN" : "EUR",
     });
   };
 

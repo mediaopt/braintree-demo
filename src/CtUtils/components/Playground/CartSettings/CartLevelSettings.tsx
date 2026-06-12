@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { type FC, useState } from "react";
 import type { ShippingMethod } from "@commercetools/platform-sdk";
 import { GroupWrapper } from "./GroupWrapper.tsx";
 import { ShippingMethods } from "./ShippingMethods.tsx";
@@ -7,6 +7,7 @@ import { Customer } from "./Customer.tsx";
 import { PriceRoundingMode } from "./PriceRoundingMode.tsx";
 import { TaxCalculationMode } from "./TaxCalculationMode.tsx";
 import { Country } from "./Country.tsx";
+import { Currency } from "./Currency.tsx";
 import { Button } from "../../Button.tsx";
 import type { OnLocalCartUpdate } from "../../../../types";
 
@@ -25,10 +26,20 @@ export const CartLevelSettings: FC<CartLevelSettingsProps> = ({
   availableShippingMethods,
   allowSubmit,
 }) => {
+  const [selectedCountry, setSelectedCountry] = useState("DE");
+
+  const handleCartUpdate: OnLocalCartUpdate = (partial) => {
+    if (partial.billingAddress?.country) {
+      setSelectedCountry(partial.billingAddress.country);
+    }
+    onCartUpdate(partial);
+  };
+
   return (
     <GroupWrapper title="Cart Level Settings">
       <div className="flex gap-4 sm:gap-8">
-        <Country onCartUpdate={onCartUpdate} />
+        <Country onCartUpdate={handleCartUpdate} />
+        {selectedCountry === "PL" && <Currency onCartUpdate={onCartUpdate} />}
         {availableShippingMethods && (
           <ShippingMethods
             methods={availableShippingMethods}
