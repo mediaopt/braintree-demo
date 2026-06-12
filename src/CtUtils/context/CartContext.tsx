@@ -1,9 +1,16 @@
-import { createContext, type FC, type PropsWithChildren, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  type FC,
+  type PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import type { Cart } from "@commercetools/platform-sdk";
 import { createCart, updateCart as updateCartApi } from "../services/cart.ts";
-import { CART_CURRENCY, CART_COUNTRY, ADDRESSES } from "../../constants.ts";
 import type { CartStateData, OnLocalCartUpdate } from "../../types.ts";
 import { handleCartActions } from "../components/Playground/handleCartActions.ts";
+import { cartDraftFromLocal } from "../../helpers.ts";
 
 type CartContextValue = {
   cart: Cart | undefined;
@@ -23,13 +30,9 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (cart) return;
-    createCart({
-      currency: CART_CURRENCY,
-      country: CART_COUNTRY,
-      customerEmail: "guest@checkout.ct",
-      billingAddress: ADDRESSES[CART_COUNTRY],
-      shippingAddress: ADDRESSES[CART_COUNTRY],
-    }).then(({ body }) => { if (body) setCart(body); });
+    createCart(cartDraftFromLocal(localCartData)).then(({ body }) => {
+      if (body) setCart(body);
+    });
   }, []);
 
   useEffect(() => {
@@ -44,17 +47,12 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     if (!cart) return;
 
     // CT carts are immutable with respect to currency — recreate when it changes
-    if (localCartData.currency && localCartData.currency !== cart.totalPrice.currencyCode) {
+    if (
+      localCartData.currency &&
+      localCartData.currency !== cart.totalPrice.currencyCode
+    ) {
       try {
-        const country = localCartData.country ?? cart.country ?? CART_COUNTRY;
-        const address = localCartData.billingAddress ?? ADDRESSES[country] ?? ADDRESSES[CART_COUNTRY];
-        const { body } = await createCart({
-          currency: localCartData.currency,
-          country,
-          customerEmail: "guest@checkout.ct",
-          billingAddress: address,
-          shippingAddress: localCartData.shippingAddress ?? address,
-        });
+        const { body } = await createCart(cartDraftFromLocal(localCartData));
         if (body) setCart(body);
       } catch (error) {
         setCartError((error as Error).message);
@@ -74,7 +72,16 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={{ cart, setCart, localCartData, updateLocalCartData, updateCart, cartError }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        setCart,
+        localCartData,
+        updateLocalCartData,
+        updateCart,
+        cartError,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

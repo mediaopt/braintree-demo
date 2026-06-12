@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Cart, Product } from "@commercetools/platform-sdk";
+import type { Product } from "@commercetools/platform-sdk";
 import {
   getProduct,
   addProductToCart,
@@ -7,20 +7,18 @@ import {
 } from "../../services/products";
 import { formatPrice } from "../../services/format";
 import { Button } from "../Button.tsx";
+import { loadExpress } from "../../../CheckoutLoader/loadExpress.ts";
+import { useCart } from "../../context/CartContext.tsx";
+import { cartDraftFromLocal } from "../../../helpers.ts";
+import { createCart } from "../../services/cart.ts";
 
 interface ProductCardProps {
   productId: string;
-  cart?: Cart;
-  onMoveProduct?: (cart?: Cart) => void;
-  onBuyNow?: () => Promise<void>;
+  isExpress?: boolean;
 }
 
-export const ProductCard = ({
-  productId,
-  cart,
-  onMoveProduct,
-  onBuyNow,
-}: ProductCardProps) => {
+export const ProductCard = ({ productId, isExpress }: ProductCardProps) => {
+  const { cart, setCart, localCartData } = useCart();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
   useEffect(() => {
@@ -51,7 +49,7 @@ export const ProductCard = ({
   const handleAdd = async () => {
     if (!cart) return;
     const { body } = await addProductToCart(cart.id, cart.version, productId);
-    body && onMoveProduct?.(body);
+    if (body) setCart(body);
   };
 
   const handleRemove = async () => {
@@ -61,7 +59,7 @@ export const ProductCard = ({
       cart.version,
       lineItemId!,
     );
-    body && onMoveProduct?.(body);
+    if (body) setCart(body);
   };
 
   return (
