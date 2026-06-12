@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Playground } from "./Playground";
 import { labelMap } from "../../../constants.ts";
+import { CartProvider } from "../../context/CartContext.tsx";
 
 const meta = {
   title: "Playground",
   component: Playground,
+  decorators: [(Story) => <CartProvider><Story /></CartProvider>],
   args: {},
   argTypes: {
     mode: {
