@@ -1,6 +1,6 @@
 # Braintree Payment Demo
 
-> **Disclaimer:** This project only shows how to add the Braintree commercetools checkout connector enabler to the shop frontend. It is not a production-ready shop implementation. For setting up a proper commercetools shop please refer to the [official commercetools documentation](https://docs.commercetools.com).
+> **Note:** This is a demo for the Braintree commercetools connector. It demonstrates features relevant for different merchants and emphasizes payment-relevant aspects rather than buyer experience. It is not an official shop implementation — it is your responsibility to implement all surrounding pages in your shop. For implementation guidance refer to the [official commercetools documentation](https://docs.commercetools.com) and the [Checkout Browser SDK documentation](https://docs.commercetools.com/checkout/browser-sdk).
 
 A minimalistic demo environment for Braintree payment methods integrated with commercetools. Built with React, Vite, TypeScript, and Storybook.
 
@@ -24,11 +24,14 @@ cp env.template .env
 
 ```bash
 npm run storybook        # start Storybook on :6006 (primary demo entry point)
+npm run serve-return     # start the return page template server on :6007
 npm run dev              # start Vite dev server
 npm run build            # production build
 npm run lint             # ESLint
 npx vitest               # run story-based tests (headless Chromium via Playwright)
 ```
+
+`serve-return.mjs` is a minimal Node.js HTTP server that acts as the return page after checkout. Commercetools checkout redirects the customer to a return URL on payment completion; this server renders that URL and provides a link back to Storybook. Run it alongside Storybook when testing flows that redirect (e.g. 3DS, PayPal). In a real shop this page would be a proper order confirmation or result page.
 
 ## Architecture
 

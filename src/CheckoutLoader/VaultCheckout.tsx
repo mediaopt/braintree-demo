@@ -14,9 +14,12 @@ export const VaultCheckout = () => {
   return (
     <>
       <p>
-        This demo implementation grants that vault will be triggered with a
-        signed in commercetools customer. It is your responsibility to only
-        allow access to vault in your shop only for authenticated users.
+        This is a demo for the Braintree commercetools connector. It
+        demonstrates features relevant for different merchants and emphasizes
+        payment-relevant aspects rather than buyer experience. It is not an
+        official shop implementation — it is your responsibility to implement
+        all surrounding pages in your shop. In particular, vault must only be
+        accessible to authenticated users.
       </p>
       <div data-ctc-express="PayPalVault"></div>
       <div data-ctc-express="CreditCardVault"></div>

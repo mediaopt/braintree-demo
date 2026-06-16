@@ -105,11 +105,19 @@ export const TriggerCheckoutButton = ({
           : "To use this demo first select the parameters in storybook and then trigger the load checkout."}
       </div>
       <div className="my-4">
-        This is your responsibility to implement the relevant page components
-        except checkout itself. This demo only implements necessary minimum for
-        initializing Braintree commercetools checkout with various cart
-        settings. For the official guides please refer to{" "}
-        <a href="https://docs.commercetools.com">commercetools documentation</a>
+        This is a demo for the Braintree commercetools connector. It
+        demonstrates features relevant for different merchants and emphasizes
+        payment-relevant aspects rather than buyer experience. It is not an
+        official shop implementation — it is your responsibility to implement
+        all surrounding pages in your shop. For implementation guidance refer
+        to the{" "}
+        <a href="https://docs.commercetools.com">
+          official commercetools documentation
+        </a>{" "}
+        and the{" "}
+        <a href="https://docs.commercetools.com/checkout/browser-sdk">
+          Checkout Browser SDK documentation
+        </a>
         .
       </div>
       {mountedCartId ? (
