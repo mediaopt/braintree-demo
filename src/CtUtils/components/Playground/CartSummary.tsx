@@ -10,7 +10,7 @@ const getLocalizedString = (ls: Record<string, string>) =>
 
 interface CartSummaryProps {
   cart: Cart;
-  onLoadCheckout: () => void;
+  onLoadCheckout?: () => void;
   cartError?: string;
 }
 
@@ -103,15 +103,17 @@ export const CartSummary: FC<CartSummaryProps> = ({
           </div>
         </div>
 
-        <Button
-          action={onLoadCheckout}
-          disabled={!hasAmount || !!cartError}
-          title={`Load checkout ${formatPrice(
-            totalPrice.centAmount,
-            totalPrice.currencyCode,
-            totalPrice.fractionDigits,
-          )}`}
-        />
+        {onLoadCheckout && (
+          <Button
+            action={onLoadCheckout}
+            disabled={!hasAmount || !!cartError}
+            title={`Load checkout ${formatPrice(
+              totalPrice.centAmount,
+              totalPrice.currencyCode,
+              totalPrice.fractionDigits,
+            )}`}
+          />
+        )}
       </div>
     </GroupWrapper>
   );
