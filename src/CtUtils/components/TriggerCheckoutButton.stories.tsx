@@ -42,9 +42,10 @@ const StandardWrapper: FC<StandardWrapperProps> = ({
   priceRoundingMode,
   taxCalculationMode,
 }) => {
-  const products = PRODUCTS
-    .map((p) => ({ productId: p.id, quantity: quantities[p.description] }))
-    .filter((p) => p.quantity > 0);
+  const products = PRODUCTS.map((p) => ({
+    productId: p.id,
+    quantity: quantities[p.description],
+  })).filter((p) => p.quantity > 0);
 
   return (
     <TriggerCheckoutButton
@@ -63,12 +64,26 @@ const StandardWrapper: FC<StandardWrapperProps> = ({
 const CART_SETTINGS_ARG_TYPES: any = {
   country: {
     control: "select",
-    options: ["Germany", "USA"],
-    mapping: { Germany: "DE", USA: "US" },
+    options: ["Germany", "USA", "Poland"],
+    mapping: { Germany: "DE", USA: "US", Poland: "PL" },
     table: { category: "Cart settings" },
   },
-  signedIn: { name: "Signed in customer", control: "boolean", table: { category: "Cart settings" } },
-  applyDiscount: { name: "10% cart discount", control: "boolean", table: { category: "Cart settings" } },
+  currency: {
+    if: { arg: "country", eq: "Poland" },
+    control: "radio",
+    options: ["PLN", "EUR"],
+    table: { category: "Cart settings" },
+  },
+  signedIn: {
+    name: "Signed in customer",
+    control: "boolean",
+    table: { category: "Cart settings" },
+  },
+  applyDiscount: {
+    name: "10% cart discount",
+    control: "boolean",
+    table: { category: "Cart settings" },
+  },
   priceRoundingMode: {
     control: "select",
     options: ["HalfEven", "HalfUp", "HalfDown"],
@@ -83,6 +98,7 @@ const CART_SETTINGS_ARG_TYPES: any = {
 
 const CART_SETTINGS_ARGS = {
   country: "Germany",
+  currency: "PLN",
   signedIn: false,
   applyDiscount: false,
   priceRoundingMode: "HalfEven",
@@ -91,7 +107,7 @@ const CART_SETTINGS_ARGS = {
 
 // --- Stories ---
 
-export const VaultWithoutPayment: Story = {
+export const VaultWithoutPurchase: Story = {
   parameters: { controls: { disable: true } },
   args: {
     mode: "pureVault",
@@ -116,33 +132,52 @@ export const Express: Story = {
   },
 };
 
-export const Standard: Story = {
-  render: (args) => {
-    const a = args as any;
+const STANDARD_STORY_CONFIG = {
+  render: (args: any, storyMode: "fullCheckout" | "paymentOnly") => {
     const quantities = Object.fromEntries(
-      PRODUCTS.map((p) => [p.description, a[p.description] ?? 0])
+      PRODUCTS.map((p) => [p.description, args[p.description] ?? 0]),
     ) as Record<QuantityKey, number>;
     return (
       <StandardWrapper
+        mode={storyMode}
         quantities={quantities}
-        country={a.country}
-        signedIn={a.signedIn}
-        applyDiscount={a.applyDiscount}
-        priceRoundingMode={a.priceRoundingMode}
-        taxCalculationMode={a.taxCalculationMode}
+        country={args.country}
+        signedIn={args.signedIn}
+        applyDiscount={args.applyDiscount}
+        priceRoundingMode={args.priceRoundingMode}
+        taxCalculationMode={args.taxCalculationMode}
       />
     );
   },
   argTypes: {
     productId: { table: { disable: true } },
     ...Object.fromEntries(
-      PRODUCTS.map((p) => [p.description, { control: { type: "number", min: 0 }, table: { category: "Products" } }])
+      PRODUCTS.map((p) => [
+        p.description,
+        {
+          control: { type: "number", min: 0 },
+          table: { category: "Products" },
+        },
+      ]),
     ),
     ...CART_SETTINGS_ARG_TYPES,
   } as any,
   args: {
-    mode: "standard",
-    ...Object.fromEntries(PRODUCTS.map((p, i) => [p.description, i === 0 ? 1 : 0])),
+    ...Object.fromEntries(
+      PRODUCTS.map((p, i) => [p.description, i === 0 ? 1 : 0]),
+    ),
     ...CART_SETTINGS_ARGS,
   } as any,
+};
+
+export const FullCheckout: Story = {
+  ...STANDARD_STORY_CONFIG,
+  render: (args) => STANDARD_STORY_CONFIG.render(args, "fullCheckout"),
+  args: { ...STANDARD_STORY_CONFIG.args, mode: "fullCheckout" },
+};
+
+export const PaymentOnly: Story = {
+  ...STANDARD_STORY_CONFIG,
+  render: (args) => STANDARD_STORY_CONFIG.render(args, "paymentOnly"),
+  args: { ...STANDARD_STORY_CONFIG.args, mode: "paymentOnly" },
 };

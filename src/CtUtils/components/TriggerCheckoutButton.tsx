@@ -1,19 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   CartDraft,
   RoundingMode,
   TaxCalculationMode,
 } from "@commercetools/platform-sdk";
 import { createCart } from "../services/cart";
-import {
-  CART_CURRENCY,
-  CART_COUNTRY,
-  DEFAULT_CUSTOMER_ID,
-  DISCOUNT_CODES, labelMap
-} from "../../constants";
+import { DEFAULT_CUSTOMER_ID, DISCOUNT_CODES } from "../../constants";
 import { Button } from "./Button.tsx";
-import { CheckoutLoader } from "../../CheckoutLoader/CheckoutLoader.tsx";
-import type { BraintreeCheckoutMode, CartCheckoutData } from "../../types.ts";
+import type { BraintreeCheckoutMode, CartStateData } from "../../types.ts";
+import { cartDraftFromLocal } from "../../helpers.ts";
+import { loadStandardCheckout } from "../../CheckoutLoader/loadStandardCheckout.ts";
+import { loadExpress } from "../../CheckoutLoader/loadExpress.ts";
+import { loadVault } from "../../CheckoutLoader/loadVault.ts";
 
 interface LineItem {
   productId: string;
@@ -25,6 +23,7 @@ interface TriggerCheckoutButtonProps {
   products?: LineItem[];
   productId?: string;
   country?: string;
+  currency?: string;
   signedIn?: boolean;
   applyDiscount?: boolean;
   priceRoundingMode?: RoundingMode;
@@ -36,32 +35,31 @@ export const TriggerCheckoutButton = ({
   products,
   productId,
   country,
+  currency,
   signedIn,
   applyDiscount,
   priceRoundingMode,
   taxCalculationMode,
 }: TriggerCheckoutButtonProps) => {
   const [loading, setLoading] = useState(false);
-  const [checkoutData, setCheckoutData] = useState<CartCheckoutData | null>(
-    null,
-  );
+  const [mountedCartId, setMountedCartId] = useState<string | null>(null);
+
+  const buildLocalDraft = (): CartStateData => ({
+    ...(country && { country }),
+    ...(currency && { currency }),
+    ...(priceRoundingMode && { priceRoundingMode }),
+    ...(taxCalculationMode && { taxCalculationMode }),
+  });
 
   const handleClick = async () => {
     setLoading(true);
     try {
       const draft: CartDraft = {
-        currency: CART_CURRENCY,
-        country: CART_COUNTRY,
-        ...(country && {
-          billingAddress: { country },
-          shippingAddress: { country },
-        }),
+        ...cartDraftFromLocal(buildLocalDraft()),
         ...(signedIn && { customerId: DEFAULT_CUSTOMER_ID }),
         ...(applyDiscount && {
           discountCodes: DISCOUNT_CODES.map((d) => d.code),
         }),
-        ...(priceRoundingMode && { priceRoundingMode }),
-        ...(taxCalculationMode && { taxCalculationMode }),
         ...(productId
           ? { lineItems: [{ productId, quantity: 1 }] }
           : products?.length && {
@@ -76,28 +74,60 @@ export const TriggerCheckoutButton = ({
       const { body: newCart } = await createCart(draft);
       if (!newCart) return;
 
-      setCheckoutData({
-        cartId: newCart.id,
-        currencyCode: newCart.totalPrice.currencyCode,
-        countryCode:
-          newCart.country ??
-          newCart.billingAddress?.country ??
-          newCart.shippingAddress?.country ??
-          CART_COUNTRY,
-        mode,
-      });
+      if (mode === "fullCheckout" || mode === "paymentOnly") {
+        await loadStandardCheckout(newCart.id, mode);
+      } else {
+        setMountedCartId(newCart.id);
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  return checkoutData ? (
-    <></>
-  ) : (
-    <Button
-      action={handleClick}
-      title={loading ? "Loading…" : labelMap[mode]}
-      disabled={loading}
-    />
+  useEffect(() => {
+    if (!mountedCartId) return;
+    const localDraft = buildLocalDraft();
+    if (mode === "express") {
+      loadExpress({
+        cartId: mountedCartId,
+        cartDraft: cartDraftFromLocal(localDraft),
+      }).catch(console.log);
+    } else if (mode === "pureVault") {
+      loadVault(mountedCartId, localDraft).catch(console.log);
+    }
+  }, [mountedCartId]);
+
+  return (
+    <>
+      <div>
+        {mode === "pureVault"
+          ? "In this mode will load automatically for a signed in commercetools customer"
+          : "To use this demo first select the parameters in storybook and then trigger the load checkout."}
+      </div>
+      <div className="my-4">
+        This is your responsibility to implement the relevant page components
+        except checkout itself. This demo only implements necessary minimum for
+        initializing Braintree commercetools checkout with various cart
+        settings. For the official guides please refer to{" "}
+        <a href="https://docs.commercetools.com">commercetools documentation</a>
+        .
+      </div>
+      {mountedCartId ? (
+        mode === "pureVault" ? (
+          <>
+            <div data-ctc-express="PayPalVault"></div>
+            <div data-ctc-express="CreditCardVault"></div>
+          </>
+        ) : (
+          <div data-ctc-express="PayPal"></div>
+        )
+      ) : (
+        <Button
+          action={handleClick}
+          title={loading ? "Loading…" : "Start checkout"}
+          disabled={loading}
+        />
+      )}
+    </>
   );
 };
