@@ -15,9 +15,11 @@ import { createCart } from "../../services/cart.ts";
 interface ProductCardProps {
   productId: string;
   isExpress?: boolean;
+  isSelected?: boolean;
+  onSelect?: () => void;
 }
 
-export const ProductCard = ({ productId, isExpress }: ProductCardProps) => {
+export const ProductCard = ({ productId, isExpress, isSelected, onSelect }: ProductCardProps) => {
   const { cart, setCart, localCartData } = useCart();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
@@ -62,9 +64,21 @@ export const ProductCard = ({ productId, isExpress }: ProductCardProps) => {
     if (body) setCart(body);
   };
 
+  if (isExpress && isSelected === false) {
+    return (
+      <button
+        onClick={onSelect}
+        className="flex flex-col items-center gap-1 p-1 rounded ring-1 ring-gray-200 cursor-pointer"
+      >
+        {image && <img src={image.url} alt={displayName} className="w-20 h-20 object-cover" />}
+        <p className="text-xs text-center w-24">{displayName}</p>
+      </button>
+    );
+  }
+
   return (
-    <div className="w-37.5 m-4 flex flex-col gap-2">
-      {image && <img src={image.url} alt={displayName} className="h-50" />}
+    <div className={`${isExpress ? "min-w-100" : "w-37.5"} m-4 flex flex-col gap-2`}>
+      {image && <img src={image.url} alt={displayName} className="h-50 mx-auto" />}
       <p>{displayName}</p>
       <p className="text-xs h-4">{displayDescription}</p>
       <div className="flex justify-between">
@@ -81,8 +95,9 @@ export const ProductCard = ({ productId, isExpress }: ProductCardProps) => {
       </div>
 
       {isExpress ? (
-        <div data-ctc-express="PayPal">
+        <div data-ctc-express="PayPal" className="w-full">
           <Button
+            className="w-full"
             action={async () => {
               const newCart = (
                 await createCart({

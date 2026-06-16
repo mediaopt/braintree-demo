@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ProductCard } from "./ProductCard";
 import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
 
@@ -22,11 +23,37 @@ interface ProductsGroupProps {
 }
 
 export const ProductsGroup = ({ isExpress }: ProductsGroupProps) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  if (isExpress) {
+    const activeId = PRODUCTS[activeIndex].id;
+    return (
+      <GroupWrapper title="Choose product to buy now">
+        <div className="grid grid-cols-[1fr_auto] gap-4 p-4">
+          <div className="flex justify-center">
+            <ProductCard productId={activeId} isExpress isSelected />
+          </div>
+          <div className="flex flex-col justify-between h-full">
+            {PRODUCTS.filter((_, i) => i !== activeIndex).map(({ id }) => (
+              <ProductCard
+                key={id}
+                productId={id}
+                isExpress
+                isSelected={false}
+                onSelect={() => setActiveIndex(PRODUCTS.findIndex((p) => p.id === id))}
+              />
+            ))}
+          </div>
+        </div>
+      </GroupWrapper>
+    );
+  }
+
   return (
-    <GroupWrapper title={isExpress ? "Choose product to buy now" : "Choose cart product(s)"}>
+    <GroupWrapper title="Choose cart product(s)">
       <div className="flex p-4 mx-auto justify-between">
         {PRODUCTS.map(({ id }) => (
-          <ProductCard key={id} productId={id} isExpress={isExpress} />
+          <ProductCard key={id} productId={id} />
         ))}
       </div>
     </GroupWrapper>

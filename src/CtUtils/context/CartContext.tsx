@@ -8,9 +8,10 @@ import {
 } from "react";
 import type { Cart } from "@commercetools/platform-sdk";
 import { createCart, updateCart as updateCartApi } from "../services/cart.ts";
-import type { CartStateData, OnLocalCartUpdate } from "../../types.ts";
+import type { BraintreeCheckoutMode, CartStateData, OnLocalCartUpdate } from "../../types.ts";
 import { handleCartActions } from "../components/Playground/handleCartActions.ts";
 import { cartDraftFromLocal } from "../../helpers.ts";
+import { DEFAULT_CUSTOMER_ID } from "../../constants.ts";
 
 type CartContextValue = {
   cart: Cart | undefined;
@@ -23,17 +24,22 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
-export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
+export const CartProvider: FC<PropsWithChildren<{ mode: BraintreeCheckoutMode }>> = ({ children, mode }) => {
   const [cart, setCart] = useState<Cart | undefined>(undefined);
   const [localCartData, setLocalCartData] = useState<CartStateData>({});
   const [cartError, setCartError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (cart) return;
-    createCart(cartDraftFromLocal(localCartData)).then(({ body }) => {
+    // It is your responsibility to create a valid implementation.
+    // This implementation creates a cart with a demo customer for pureVault mode.
+    const draft = mode === "pureVault"
+      ? { ...cartDraftFromLocal(), customerId: DEFAULT_CUSTOMER_ID }
+      : cartDraftFromLocal();
+    createCart(draft).then(({ body }) => {
       if (body) setCart(body);
     });
-  }, []);
+  }, [cart, mode]);
 
   useEffect(() => {
     setLocalCartData({});

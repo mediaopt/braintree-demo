@@ -1,4 +1,4 @@
-import type { CartStateData } from "./Playground.tsx";
+import type { CartStateData } from "../../../types.ts";
 import type { CartUpdateAction } from "@commercetools/platform-sdk";
 
 export const handleCartActions = (

@@ -1,11 +1,20 @@
 import { apiRoot } from "../client/ctAPI.ts";
-import type { ClientResponse } from "@commercetools/ts-client";
 import type { Cart, Product } from "@commercetools/platform-sdk";
+import type { ClientResponse } from "@commercetools/ts-client";
 
-export const getProduct = (
+const productCache = new Map<string, Promise<Product>>();
+
+export const getProduct = async (
   productId: string,
-): Promise<ClientResponse<Product>> =>
-  apiRoot.products().withId({ ID: productId }).get().execute();
+): Promise<{ body: Product }> => {
+  if (!productCache.has(productId)) {
+    productCache.set(
+      productId,
+      apiRoot.products().withId({ ID: productId }).get().execute().then((r) => r.body),
+    );
+  }
+  return { body: await productCache.get(productId)! };
+};
 
 export const addProductToCart = async (
   cartId: string,

@@ -1,13 +1,5 @@
 import type { ShippingMethodResourceIdentifier, Cart } from "@commercetools/platform-sdk";
 
-export type CartCheckoutData = {
-  cartId: string;
-  currencyCode: string;
-  countryCode: string;
-  mode: BraintreeCheckoutMode;
-  productId?: string;
-};
-
 export type BraintreeCheckoutMode =
   | "fullCheckout"
   | "paymentOnly"
