@@ -6,14 +6,12 @@ export const mountExpressMethods = async (
   options: {
     countryCode: string;
     currencyCode: string;
-    filter: (type: string) => boolean;
     onPayButtonClick: () => Promise<void>;
   },
 ): Promise<void> => {
   expressPayment.init({ ...paymentData, countryCode: options.countryCode });
   const methods = await expressPayment.getAvailableMethods();
   methods
-    .filter(({ type }: any) => options.filter(type))
     .forEach((method: any) =>
       expressPayment.mountMethod({
         expressId: method.type,

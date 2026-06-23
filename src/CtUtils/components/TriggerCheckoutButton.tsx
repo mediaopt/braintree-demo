@@ -11,7 +11,7 @@ import type { BraintreeCheckoutMode, CartStateData } from "../../types.ts";
 import { cartDraftFromLocal } from "../../helpers.ts";
 import { loadStandardCheckout } from "../../CheckoutLoader/loadStandardCheckout.ts";
 import { loadExpress } from "../../CheckoutLoader/loadExpress.ts";
-import { loadVault } from "../../CheckoutLoader/loadVault.ts";
+// import { loadVault } from "../../CheckoutLoader/loadVault.ts";
 
 interface LineItem {
   productId: string;
@@ -68,7 +68,7 @@ export const TriggerCheckoutButton = ({
                 quantity,
               })),
             }),
-        ...(mode === "pureVault" && { customerId: DEFAULT_CUSTOMER_ID }),
+        // ...(mode === "pureVault" && { customerId: DEFAULT_CUSTOMER_ID }),
       };
 
       const { body: newCart } = await createCart(draft);
@@ -92,25 +92,27 @@ export const TriggerCheckoutButton = ({
         cartId: mountedCartId,
         cartDraft: cartDraftFromLocal(localDraft),
       }).catch(console.log);
-    } else if (mode === "pureVault") {
-      loadVault(mountedCartId, localDraft).catch(console.log);
     }
+    // else if (mode === "pureVault") {
+    //   loadVault(mountedCartId, localDraft).catch(console.log);
+    // }
   }, [mountedCartId]);
 
   return (
     <>
       <div>
-        {mode === "pureVault"
-          ? "In this mode will load automatically for a signed in commercetools customer"
-          : "To use this demo first select the parameters in storybook and then trigger the load checkout."}
+        {/*{mode === "pureVault"*/}
+        {/*  ? "In this mode will load automatically for a signed in commercetools customer":*/}
+        To use this demo first select the parameters in storybook and then
+        trigger the load checkout.
       </div>
       <div className="my-4">
         This is a demo for the Braintree commercetools connector. It
         demonstrates features relevant for different merchants and emphasizes
         payment-relevant aspects rather than buyer experience. It is not an
         official shop implementation — it is your responsibility to implement
-        all surrounding pages in your shop. For implementation guidance refer
-        to the{" "}
+        all surrounding pages in your shop. For implementation guidance refer to
+        the{" "}
         <a href="https://docs.commercetools.com">
           official commercetools documentation
         </a>{" "}
@@ -121,14 +123,12 @@ export const TriggerCheckoutButton = ({
         .
       </div>
       {mountedCartId ? (
-        mode === "pureVault" ? (
-          <>
-            <div data-ctc-express="PayPalVault"></div>
-            <div data-ctc-express="CreditCardVault"></div>
-          </>
-        ) : (
-          <div data-ctc-express="PayPal"></div>
-        )
+        // mode === "pureVault" ? (
+        //   <>
+        //     <div data-ctc-express="PayPalVault"></div>
+        //     <div data-ctc-express="CreditCardVault"></div>
+        //   </>:
+        <div data-ctc-express="PayPal"></div>
       ) : (
         <Button
           action={handleClick}

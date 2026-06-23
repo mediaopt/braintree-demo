@@ -11,7 +11,7 @@ import { CartSummary } from "./CartSummary";
 import type { BraintreeCheckoutMode } from "../../../types.ts";
 import { loadStandardCheckout } from "../../../CheckoutLoader/loadStandardCheckout.ts";
 import { CartProvider, useCart } from "../../context/CartContext.tsx";
-import { VaultCheckout } from "../../../CheckoutLoader/VaultCheckout.tsx";
+// import { VaultCheckout } from "../../../CheckoutLoader/VaultCheckout.tsx";
 
 interface CartWrapperProps {
   mode: BraintreeCheckoutMode;
@@ -58,15 +58,14 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
     <div className="p-4 sm:p-8">
       <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
         {isStandardMode(mode) && <ProductsGroup />}
-        {mode !== "pureVault" && (
-          <CartLevelSettings
-            cartId={serverCart?.id}
-            onCartUpdate={updateLocalCartData}
-            onSubmit={isStandardMode(mode) ? updateCart : undefined}
-            availableShippingMethods={availableShippingMethods}
-            allowSubmit={localStateChanged}
-          />
-        )}
+        {/*mode !== "pureVault"*/}
+        <CartLevelSettings
+          cartId={serverCart?.id}
+          onCartUpdate={updateLocalCartData}
+          onSubmit={isStandardMode(mode) ? updateCart : undefined}
+          availableShippingMethods={availableShippingMethods}
+          allowSubmit={localStateChanged}
+        />
         {mode === "express" && <ProductsGroup isExpress />}
         {serverCart && (mode === "fullCheckout" || mode === "paymentOnly") && (
           <CartSummary
@@ -80,7 +79,7 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
           />
         )}
       </div>
-      {mode === "pureVault" && <VaultCheckout />}
+      {/*{mode === "pureVault" && <VaultCheckout />}*/}
     </div>
   );
 };

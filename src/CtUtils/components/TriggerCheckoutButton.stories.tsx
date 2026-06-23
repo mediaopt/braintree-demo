@@ -107,13 +107,13 @@ const CART_SETTINGS_ARGS = {
 
 // --- Stories ---
 
-export const VaultWithoutPurchase: Story = {
-  parameters: { controls: { disable: true } },
-  args: {
-    mode: "pureVault",
-    products: [],
-  },
-};
+// export const VaultWithoutPurchase: Story = {
+//   parameters: { controls: { disable: true } },
+//   args: {
+//     mode: "pureVault",
+//     products: [],
+//   },
+// };
 
 export const Express: Story = {
   argTypes: {

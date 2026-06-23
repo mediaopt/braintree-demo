@@ -16,7 +16,6 @@ export const loadExpress = async ({
   mountExpressMethods(paymentData, {
     countryCode: cartDraft.country ?? CART_COUNTRY,
     currencyCode: cartDraft.currency ?? CART_CURRENCY,
-    filter: (type) => type === "PayPal",
     onPayButtonClick: async () => {}, //the prerequisite for PayPal Express button is a vaild payment, so the cart for the Braintree connector must be created in advance
   }).catch(console.log);
 };

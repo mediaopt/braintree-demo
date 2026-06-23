@@ -4,7 +4,7 @@ export type BraintreeCheckoutMode =
   | "fullCheckout"
   | "paymentOnly"
   | "express"
-  | "pureVault";
+  // | "pureVault";
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 

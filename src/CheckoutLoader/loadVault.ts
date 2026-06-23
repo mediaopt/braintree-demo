@@ -12,7 +12,7 @@ export const loadVault = async (
   await mountExpressMethods(paymentData, {
     countryCode: draft.country!, // always set by cartDraftFromLocal (falls back to CART_COUNTRY)
     currencyCode: draft.currency!, // always set by cartDraftFromLocal (falls back to CART_CURRENCY)
-    filter: (type) => type !== "PayPal",
+    // filter: (type) => type !== "PayPal",
     onPayButtonClick: async () => {},
   });
 };

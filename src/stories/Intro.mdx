@@ -40,7 +40,8 @@ We use Vite for the development environment, so the environment variables should
       </td>
       <td>
         commercetools checkout application key, passed when creating the
-        checkout session — create it in the Merchant Center if you don't have one
+        checkout session — create it in the Merchant Center if you don't have
+        one
       </td>
     </tr>
     <tr>
@@ -105,7 +106,9 @@ The real implementation of the checkout session is covered by the `CheckoutLoade
 ### Checkout modes
 
 - Standard: commercetools standard checkout flow, must be called from a checkout page.
-- Express: commercetools express checkout flow, can be called for any page. We recommend it for buying the product directly from the product page. We also use it for Vault without purchase flow.
+- Express: commercetools express checkout flow, can be called for any page. We recommend it for buying the product directly from the product page.
+
+At the moment Vault without purchase Braintree flow is not officially included in commercetools checkout. If you are interested in this feature please request support.
 
 See also commercetools documentation for [checkout](https://docs.commercetools.com/checkout/connectors-and-applications).
 
@@ -113,7 +116,7 @@ See also commercetools documentation for [checkout](https://docs.commercetools.c
 
 The demo is built with Storybook, which allows to easily test different scenarios and configurations. All payments supported by the Braintree connector are available in this Storybook, and you can also adjust the cart settings to see how they affect the checkout flow. We have two main demo modes - Chekout and playgorund.
 
-Checkout mode gives the end-to-end checkout experience starting from the moment the сustomer clicks the checkout button and until the payment is completed. It utilized minimalistic cart configuration with storybook controls. Playground gives more visual experience of the cart configuration and covers the settings, that should be loaded dynamically, such as shipping for different countries.
+Checkout mode gives the end-to-end checkout experience starting from the moment the customer clicks the checkout button and until the payment is completed. It utilized minimalistic cart configuration with storybook controls. Playground gives more visual experience of the cart configuration and covers the settings, that should be loaded dynamically, such as shipping for different countries.
 
 Both modes are configured to demonstrate the three following checkout flows:
 
@@ -133,12 +136,6 @@ The default mode. You can add products, adjust cart-level settings (country, tax
 
 Dedicated to buy a product directly from product page. In checkout mode only one product can be selected for this mode. In playground mode each product card has a **Buy Now** button — clicking it creates the cart with that product and immediately loads the checkout session.
 
-#### Vault without purchase
-
-**_Cart requirements: cart must be associated with commercetools customer and have price 0._**
-
-No cart UI is rendered. A cart is created silently in the background with the default customer, and the checkout session loads directly. Intended to demo card-saving (vault) flows where no purchase amount is needed.
-
 ### Demo Cart
 
 In our demo we include both standard shop features, such as product selection and shipping, and some of the more advanced features that are usually set on at least shop level or even project level. We simplify the things not directly relevant for payment process, such as setting the country also sets a random address within this country.
@@ -153,7 +150,7 @@ See also commercetools documentation for [product](https://docs.commercetools.co
 
 The price shown next to each product in the Playground is taken from the default **master variant** of that product. Commercetools supports country-specific and channel-specific prices, so the actual amount charged during checkout may differ once a billing country is set, please see a cart summary for an actual price.
 
-- Country: sets the country for the cart, which can affect the prices and shipping options. As this is a demo, we support limited amount of countries and shipping options. Also it automatically sets the billing and shipping addresses with a corresponding country (not required for vault without purchase).
-- Signed in customer: assigns a customer to the cart, which is required for vault without purchase flow. If the connector has vaulting enabled and customer is signed in - PayPal and Credit card will provide the saved payments automatically.
+- Country: sets the country for the cart, which can affect the prices and shipping options. As this is a demo, we support limited amount of countries and shipping options. Also, it automatically sets the billing and shipping addresses with a corresponding country.
+- Signed in customer: assigns a customer to the cart, which is required for vault without purchase flow. If the connector has vaulting enabled and customer is signed in - Braintree saved payment methods will be loaded automatically.
 
 Other settings directly correspond to the [commercetools cart properties](https://docs.commercetools.com/api/projects/carts).

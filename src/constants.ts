@@ -62,5 +62,5 @@ export const labelMap: Record<BraintreeCheckoutMode, string> = {
   fullCheckout: "Checkout",
   paymentOnly: "Payment",
   express: "Buy now",
-  pureVault: "Vault without purchase",
+  // pureVault: "Vault without purchase",
 };

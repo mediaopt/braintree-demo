@@ -11,7 +11,7 @@ import { createCart, updateCart as updateCartApi } from "../services/cart.ts";
 import type { BraintreeCheckoutMode, CartStateData, OnLocalCartUpdate } from "../../types.ts";
 import { handleCartActions } from "../components/Playground/handleCartActions.ts";
 import { cartDraftFromLocal } from "../../helpers.ts";
-import { DEFAULT_CUSTOMER_ID } from "../../constants.ts";
+// import { DEFAULT_CUSTOMER_ID } from "../../constants.ts";
 
 type CartContextValue = {
   cart: Cart | undefined;
@@ -33,9 +33,10 @@ export const CartProvider: FC<PropsWithChildren<{ mode: BraintreeCheckoutMode }>
     if (cart) return;
     // It is your responsibility to create a valid implementation.
     // This implementation creates a cart with a demo customer for pureVault mode.
-    const draft = mode === "pureVault"
-      ? { ...cartDraftFromLocal(), customerId: DEFAULT_CUSTOMER_ID }
-      : cartDraftFromLocal();
+    const draft =
+      // mode === "pureVault"
+      // ? { ...cartDraftFromLocal(), customerId: DEFAULT_CUSTOMER_ID } :
+      cartDraftFromLocal();
     createCart(draft).then(({ body }) => {
       if (body) setCart(body);
     });
