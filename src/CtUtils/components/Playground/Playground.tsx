@@ -30,6 +30,7 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
     localCartData,
     updateLocalCartData,
     updateCart,
+    createCartFromDraft,
     cartError,
   } = useCart();
   const [availableShippingMethods, setAvailableShippingMethods] =
@@ -63,6 +64,7 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
           cartId={serverCart?.id}
           onCartUpdate={updateLocalCartData}
           onSubmit={isStandardMode(mode) ? updateCart : undefined}
+          onCreateCart={isStandardMode(mode) ? createCartFromDraft : undefined}
           availableShippingMethods={availableShippingMethods}
           allowSubmit={localStateChanged}
         />

@@ -19,6 +19,7 @@ type CartContextValue = {
   localCartData: CartStateData;
   updateLocalCartData: OnLocalCartUpdate;
   updateCart: () => Promise<void>;
+  createCartFromDraft: (data: CartStateData) => Promise<void>;
   cartError: string | undefined;
 };
 
@@ -49,6 +50,15 @@ export const CartProvider: FC<PropsWithChildren<{ mode: BraintreeCheckoutMode }>
 
   const updateLocalCartData: OnLocalCartUpdate = (partial) =>
     setLocalCartData((prev) => ({ ...prev, ...partial }));
+
+  const createCartFromDraft = async (data: CartStateData) => {
+    try {
+      const { body } = await createCart(cartDraftFromLocal(data));
+      if (body) setCart(body);
+    } catch (error) {
+      setCartError((error as Error).message);
+    }
+  };
 
   const updateCart = async () => {
     if (!cart) return;
@@ -86,6 +96,7 @@ export const CartProvider: FC<PropsWithChildren<{ mode: BraintreeCheckoutMode }>
         localCartData,
         updateLocalCartData,
         updateCart,
+        createCartFromDraft,
         cartError,
       }}
     >
