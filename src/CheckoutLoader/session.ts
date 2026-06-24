@@ -1,13 +1,16 @@
 import { fetchCoCoOAuthToken } from "../CtUtils/services/auth";
+import type { PaymentFlowData } from "@commercetools/checkout-browser-sdk";
 
-export type PaymentTemplateData = {
-  projectKey: string;
-  region: string;
-  sessionId: string;
-  logInfo: boolean;
-  logWarn: boolean;
-  logError: boolean;
-};
+export type PaymentTemplateData = Pick<
+  PaymentFlowData,
+  | "projectKey"
+  | "region"
+  | "sessionId"
+  | "logInfo"
+  | "logWarn"
+  | "logError"
+  | "onInfo"
+>;
 
 export const buildPaymentTemplateData = async (
   cartId: string,
@@ -23,6 +26,9 @@ export const buildPaymentTemplateData = async (
     logInfo: true,
     logWarn: true,
     logError: true,
+    onInfo: function (message) {
+      console.log("Received: ", message);
+    },
   };
 };
 

@@ -16,6 +16,8 @@ export const getProduct = async (
   return { body: await productCache.get(productId)! };
 };
 
+const CART_EXPAND = { expand: ["discountCodes[*].discountCode"] };
+
 export const addProductToCart = async (
   cartId: string,
   cartVersion: number,
@@ -30,6 +32,7 @@ export const addProductToCart = async (
         version: cartVersion,
         actions: [{ action: "addLineItem", productId, variantId: 1, quantity }],
       },
+      queryArgs: CART_EXPAND,
     })
     .execute();
 };
@@ -47,6 +50,7 @@ export const removeProductFromCart = async (
         version: cartVersion,
         actions: [{ action: "removeLineItem", lineItemId, quantity: 1 }],
       },
+      queryArgs: CART_EXPAND,
     })
     .execute();
 };

@@ -1,6 +1,7 @@
 import type { Cart } from "@commercetools/platform-sdk";
+import { close } from "@commercetools/checkout-browser-sdk";
 import { formatPrice } from "../../services/format";
-import { type FC, useMemo } from "react";
+import { type FC, useMemo, useState } from "react";
 import { Button } from "../Button.tsx";
 import { GroupWrapper } from "./CartSettings/GroupWrapper.tsx";
 import { DISCOUNT_CODES } from "../../../constants";
@@ -19,8 +20,15 @@ export const CartSummary: FC<CartSummaryProps> = ({
   onLoadCheckout,
   cartError,
 }) => {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const { lineItems, shippingInfo, totalPrice, id } = cart;
   const hasAmount = (totalPrice?.centAmount ?? 0) > 0;
+
+  const handleLoadCheckout = onLoadCheckout
+    ? () => { onLoadCheckout(); setCheckoutOpen(true); }
+    : undefined;
+
+  const handleClose = () => { close(); setCheckoutOpen(false); };
 
   const discountIdToName = useMemo(
     () =>
@@ -90,6 +98,19 @@ export const CartSummary: FC<CartSummaryProps> = ({
           </div>
 
           <div>
+            <span>Country: {cart.country ?? "—"}</span>
+          </div>
+          <div>
+            <span>
+              Customer: {cart.customerId ? "Signed in" : "Guest"}
+            </span>
+          </div>
+          <div>
+            {cart.taxMode && cart.taxMode !== "Platform" && (
+              <span>Tax mode: {cart.taxMode}</span>
+            )}
+          </div>
+          <div>
             {cart.priceRoundingMode &&
               cart.priceRoundingMode !== "HalfEven" && (
                 <span>Rounding: {cart.priceRoundingMode}</span>
@@ -98,22 +119,29 @@ export const CartSummary: FC<CartSummaryProps> = ({
           <div>
             {cart.taxCalculationMode &&
               cart.taxCalculationMode !== "LineItemLevel" && (
-                <span>Tax: {cart.taxCalculationMode}</span>
+                <span>Tax calc: {cart.taxCalculationMode}</span>
               )}
           </div>
         </div>
 
-        {onLoadCheckout && (
-          <Button
-            action={onLoadCheckout}
-            disabled={!hasAmount || !!cartError}
-            title={`Load checkout ${formatPrice(
-              totalPrice.centAmount,
-              totalPrice.currencyCode,
-              totalPrice.fractionDigits,
-            )}`}
-          />
-        )}
+        <div className="flex flex-col gap-2">
+          {handleLoadCheckout && (
+            <Button
+              action={handleLoadCheckout}
+              disabled={!hasAmount || !!cartError}
+              title={`Load checkout ${formatPrice(
+                totalPrice.centAmount,
+                totalPrice.currencyCode,
+                totalPrice.fractionDigits,
+              )}`}
+            />
+          )}
+          {checkoutOpen && (
+            <div className="fixed top-4 right-4 z-2147483647">
+              <Button action={handleClose} title="Close checkout" />
+            </div>
+          )}
+        </div>
       </div>
     </GroupWrapper>
   );

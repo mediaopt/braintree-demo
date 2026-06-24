@@ -61,6 +61,7 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
         {isStandardMode(mode) && <ProductsGroup />}
         {/*mode !== "pureVault"*/}
         <CartLevelSettings
+          key={serverCart?.id}
           cartId={serverCart?.id}
           onCartUpdate={updateLocalCartData}
           onSubmit={isStandardMode(mode) ? updateCart : undefined}

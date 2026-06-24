@@ -36,31 +36,35 @@ export const CartLevelSettings: FC<CartLevelSettingsProps> = ({
     if (partial.billingAddress?.country) {
       setSelectedCountry(partial.billingAddress.country);
     }
-    setCreationSettings((prev) => ({ ...prev, ...partial }));
+    if (onCreateCart) {
+      setCreationSettings((prev) => ({ ...prev, ...partial }));
+    } else {
+      onCartUpdate(partial);
+    }
   };
 
   return (
     <GroupWrapper title="Cart Level Settings">
-      {onCreateCart && (
-        <div className="mb-6">
-          <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
-            Set at cart creation
-          </p>
-          <div className="flex gap-4 sm:gap-8 flex-wrap">
-            <Country onCartUpdate={handleCreationUpdate} />
-            {selectedCountry === "PL" && (
-              <Currency onCartUpdate={handleCreationUpdate} />
-            )}
-            <TaxMode onCartUpdate={handleCreationUpdate} />
-          </div>
+      <div className="mb-6">
+        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+          Set at cart creation
+        </p>
+        <div className="flex gap-4 sm:gap-8 flex-wrap">
+          <Country onCartUpdate={handleCreationUpdate} />
+          {selectedCountry === "PL" && (
+            <Currency onCartUpdate={handleCreationUpdate} />
+          )}
+          <TaxMode onCartUpdate={handleCreationUpdate} />
+        </div>
+        {onCreateCart && (
           <div className="mt-4">
             <Button
               action={() => onCreateCart(creationSettings)}
               title="New cart"
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <div>
         <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
