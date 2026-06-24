@@ -40,7 +40,9 @@ export const ProductsGroup = ({ isExpress }: ProductsGroupProps) => {
                 productId={id}
                 isExpress
                 isSelected={false}
-                onSelect={() => setActiveIndex(PRODUCTS.findIndex((p) => p.id === id))}
+                onSelect={() =>
+                  setActiveIndex(PRODUCTS.findIndex((p) => p.id === id))
+                }
               />
             ))}
           </div>
@@ -51,7 +53,7 @@ export const ProductsGroup = ({ isExpress }: ProductsGroupProps) => {
 
   return (
     <GroupWrapper title="Choose cart product(s)">
-      <div className="flex p-4 mx-auto justify-between">
+      <div className="flex p-4 mx-auto justify-between flex-wrap">
         {PRODUCTS.map(({ id }) => (
           <ProductCard key={id} productId={id} />
         ))}

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
-function isStandardMode(m: BraintreeCheckoutMode): m is "fullCheckout" | "paymentOnly" {
+function isStandardMode(
+  m: BraintreeCheckoutMode,
+): m is "fullCheckout" | "paymentOnly" {
   return m === "fullCheckout" || m === "paymentOnly";
 }
 import type { ShippingMethod } from "@commercetools/platform-sdk";
@@ -58,8 +60,6 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex flex-col gap-8 max-w-fit mx-auto self-center">
-        {isStandardMode(mode) && <ProductsGroup />}
-        {/*mode !== "pureVault"*/}
         <CartLevelSettings
           key={serverCart?.id}
           cartId={serverCart?.id}
@@ -69,7 +69,7 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
           availableShippingMethods={availableShippingMethods}
           allowSubmit={localStateChanged}
         />
-        {mode === "express" && <ProductsGroup isExpress />}
+        {mode === "express" ? <ProductsGroup isExpress /> : <ProductsGroup />}
         {serverCart && (mode === "fullCheckout" || mode === "paymentOnly") && (
           <CartSummary
             cart={serverCart}

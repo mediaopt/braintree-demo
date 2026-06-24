@@ -19,7 +19,12 @@ interface ProductCardProps {
   onSelect?: () => void;
 }
 
-export const ProductCard = ({ productId, isExpress, isSelected, onSelect }: ProductCardProps) => {
+export const ProductCard = ({
+  productId,
+  isExpress,
+  isSelected,
+  onSelect,
+}: ProductCardProps) => {
   const { cart, setCart, localCartData } = useCart();
   const [product, setProduct] = useState<Product | undefined>(undefined);
 
@@ -70,15 +75,25 @@ export const ProductCard = ({ productId, isExpress, isSelected, onSelect }: Prod
         onClick={onSelect}
         className="flex flex-col items-center gap-1 p-1 rounded ring-1 ring-gray-200 cursor-pointer"
       >
-        {image && <img src={image.url} alt={displayName} className="w-20 h-20 object-cover" />}
+        {image && (
+          <img
+            src={image.url}
+            alt={displayName}
+            className="w-20 h-20 object-cover"
+          />
+        )}
         <p className="text-xs text-center w-24">{displayName}</p>
       </button>
     );
   }
 
   return (
-    <div className={`${isExpress ? "min-w-100" : "w-37.5"} m-4 flex flex-col gap-2`}>
-      {image && <img src={image.url} alt={displayName} className="h-50 mx-auto" />}
+    <div
+      className={`${isExpress ? "min-w-100" : "w-37.5 min-w-37.5"} m-4 flex flex-col gap-2`}
+    >
+      {image && (
+        <img src={image.url} alt={displayName} className="h-50 mx-auto" />
+      )}
       <p>{displayName}</p>
       <p className="text-xs h-4">{displayDescription}</p>
       <div className="flex justify-between">

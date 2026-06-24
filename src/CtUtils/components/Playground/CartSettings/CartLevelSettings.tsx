@@ -43,33 +43,27 @@ export const CartLevelSettings: FC<CartLevelSettingsProps> = ({
     }
   };
 
+  const hasButtons = onCreateCart || onSubmit;
+
   return (
     <GroupWrapper title="Cart Level Settings">
-      <div className="mb-6">
-        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+      <div className="grid grid-cols-[auto_auto] gap-x-8 gap-y-4 items-start">
+        {/* Row 1: titles */}
+        <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
           Set at cart creation
-        </p>
-        <div className="flex gap-4 sm:gap-8 flex-wrap">
+        </h3>
+        <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+          Modify existing cart
+        </h3>
+
+        {/* Row 2: settings */}
+        <div className="flex gap-4 flex-wrap">
           <Country onCartUpdate={handleCreationUpdate} />
           {selectedCountry === "PL" && (
             <Currency onCartUpdate={handleCreationUpdate} />
           )}
           <TaxMode onCartUpdate={handleCreationUpdate} />
         </div>
-        {onCreateCart && (
-          <div className="mt-4">
-            <Button
-              action={() => onCreateCart(creationSettings)}
-              title="New cart"
-            />
-          </div>
-        )}
-      </div>
-
-      <div>
-        <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
-          Modify existing cart
-        </p>
         <div className="flex gap-4 sm:gap-8 flex-wrap">
           {availableShippingMethods && (
             <ShippingMethods
@@ -82,14 +76,28 @@ export const CartLevelSettings: FC<CartLevelSettingsProps> = ({
           <PriceRoundingMode onCartUpdate={onCartUpdate} />
           <TaxCalculationMode onCartUpdate={onCartUpdate} />
         </div>
-        {onSubmit && (
-          <div className="mt-4">
-            <Button
-              action={onSubmit}
-              disabled={!cartId || !allowSubmit}
-              title="Modify cart"
-            />
-          </div>
+
+        {/* Row 3: buttons (only when at least one button is relevant) */}
+        {hasButtons && (
+          <>
+            <div>
+              {onCreateCart && (
+                <Button
+                  action={() => onCreateCart(creationSettings)}
+                  title="New cart"
+                />
+              )}
+            </div>
+            <div>
+              {onSubmit && (
+                <Button
+                  action={onSubmit}
+                  disabled={!cartId || !allowSubmit}
+                  title="Modify cart"
+                />
+              )}
+            </div>
+          </>
         )}
       </div>
     </GroupWrapper>
