@@ -11,7 +11,7 @@ import type { BraintreeCheckoutMode, CartStateData } from "../../types.ts";
 import { cartDraftFromLocal } from "../../helpers.ts";
 import { loadStandardCheckout } from "../../CheckoutLoader/loadStandardCheckout.ts";
 import { loadExpress } from "../../CheckoutLoader/loadExpress.ts";
-// import { loadVault } from "../../CheckoutLoader/loadVault.ts";
+// import { LoadVaultWithoutPurchase } from "../../CheckoutLoader/LoadVault.tsx";
 
 interface LineItem {
   productId: string;
@@ -93,9 +93,6 @@ export const TriggerCheckoutButton = ({
         cartDraft: cartDraftFromLocal(localDraft),
       }).catch(console.log);
     }
-    // else if (mode === "pureVault") {
-    //   loadVault(mountedCartId, localDraft).catch(console.log);
-    // }
   }, [mountedCartId]);
 
   return (
@@ -124,10 +121,8 @@ export const TriggerCheckoutButton = ({
       </div>
       {mountedCartId ? (
         // mode === "pureVault" ? (
-        //   <>
-        //     <div data-ctc-express="PayPalVault"></div>
-        //     <div data-ctc-express="CreditCardVault"></div>
-        //   </>:
+        //   <LoadVaultWithoutPurchase cartId={mountedCartId} cartDraft={cartDraftFromLocal(buildLocalDraft())} />
+        // ) :
         <div data-ctc-express="PayPal"></div>
       ) : (
         <Button

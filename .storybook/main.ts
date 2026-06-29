@@ -13,8 +13,10 @@ const config: StorybookConfig = {
     "@storybook/addon-docs",
   ],
   "framework": "@storybook/react-vite",
+  staticDirs: ['../public'],
   viteFinal: (config) => {
     config.plugins = [...(config.plugins ?? []), tailwindcss()];
+    config.base = process.env.VITE_BASE_PATH ?? '/';
     return config;
   },
 };

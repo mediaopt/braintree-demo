@@ -13,7 +13,7 @@ import { CartSummary } from "./CartSummary";
 import type { BraintreeCheckoutMode } from "../../../types.ts";
 import { loadStandardCheckout } from "../../../CheckoutLoader/loadStandardCheckout.ts";
 import { CartProvider, useCart } from "../../context/CartContext.tsx";
-// import { VaultCheckout } from "../../../CheckoutLoader/VaultCheckout.tsx";
+// import { LoadVaultWithoutPurchase } from "../../../CheckoutLoader/LoadVault.tsx";
 
 interface CartWrapperProps {
   mode: BraintreeCheckoutMode;
@@ -82,7 +82,9 @@ const PlaygroundContent = ({ mode }: CartWrapperProps) => {
           />
         )}
       </div>
-      {/*{mode === "pureVault" && <VaultCheckout />}*/}
+      {/* {mode === "pureVault" && serverCart && (
+        <LoadVaultWithoutPurchase cartId={serverCart.id} cartDraft={cartDraftFromLocal(localCartData)} />
+      )} */}
     </div>
   );
 };
