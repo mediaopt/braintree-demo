@@ -128,6 +128,12 @@ A valid commercetools cart is required to start the checkout session, but differ
 
 The default mode. You can add products, adjust cart-level settings (country, tax mode, shipping, discounts), and then click **Load checkout** to start the Braintree payment session. In the Playground mode a cart is created on mount and can be edited later, in checkout mode - upon button press the cart is created with all predefined settings.
 
+#### Payment only
+
+**_Cart requirements: cart total price above 0, shipping address, billing address and customer email_**
+
+Instead of full checkout form only payment buttons will be rendered. Intended for merchants who already have own configured checkout and only need the payment module. You can add products, adjust cart-level settings (country, tax mode, shipping, discounts), and then click **Load checkout** to start the Braintree payment session. In the Playground mode a cart is created on mount and can be edited later, in checkout mode - upon button press the cart is created with all predefined settings.
+
 #### Buy Now
 
 **_Cart requirements: cart total price above 0, cart has country and currency set_**
